@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile-dev
     command: python manage.py run -h 0.0.0.0
     volumes:
-      - './services/users/:/usr/src/app/'
+      - ./services/users/:/usr/src/app/
     ports:
       - 5001:5000
     environment:
@@ -20,9 +20,10 @@ services:
     depends_on:
       - users-db
     links:
-      - users-db    
+      - users-db
 
   users-db:
+    image: postgres:13
     container_name: users-db
     build:
       context: ./services/users/project/db
@@ -32,3 +33,4 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+

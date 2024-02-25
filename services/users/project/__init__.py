@@ -6,13 +6,14 @@ import datetime
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-
 # instantiate the app
 app = Flask(__name__)
 
 
 # set configuration
-app.config.from_object("project.config.Config")
+app_settings = os.getenv('APP_SETTINGS')
+app.config.from_object(app_settings)
+
 
 # instantiate the database
 db = SQLAlchemy(app)
