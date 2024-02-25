@@ -1,17 +1,28 @@
 FROM python:3.11.4
 
-# set working directory
+# Install environment dependencies
+RUN apt-get update \
+    && apt-get -y install netcat-traditional \
+    && apt-get clean
+
+# Set working directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# add requirements
+# Add requirements
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
-# install requirements
+# Install requirements
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# add app
+# Add entrypoint.sh
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Add app
 COPY . /usr/src/app
 
-# run server
-CMD python manage.py run -h 0.0.0.0
+# Run server
+CMD ["./entrypoint.sh"]
+
