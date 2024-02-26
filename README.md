@@ -48,4 +48,88 @@ You are now connected to database "users_dev" as user "postgres".
 
 # \q 
 ```
-If you are versed in SQL, you can also play around with it!
+If you are versed in SQL, you can also play around with it! # indicates that we are inside the psql shell.
+After you login using the previous command, you can play around with psql!
+
+```
+postgres=# \c users_dev
+You are now connected to database "users_dev" as user "postgres".
+
+users_dev=# select * from users;
+ id | username | email | active
+----+----------+-------+--------
+(0 rows)
+
+users_dev=# INSERT INTO users (username, email, active) VALUES ('abrar', 'abrar@pomona.edu', true);
+INSERT 0 1
+users_dev=# select * from users;
+ id | username |      email       | active
+----+----------+------------------+--------
+  1 | abrar    | abrar@pomona.edu | t
+(1 row)
+
+users_dev=# INSERT INTO users (username, email, active) VALUES
+users_dev-# ('sae', 'sae@pomona.edu', true),
+users_dev-# ('asya', 'asya@pomona.edu', true),
+users_dev-# ('yunju', 'yunju@pomona.edu', true),
+users_dev-# ('dylan', 'dylan@pomona.edu', true),
+users_dev-# ('oncel', 'oncel@cmc.edu', true),
+users_dev-# ('landen', 'landen@pomona.edu', true),
+users_dev-# ('david', 'david@pomona.edu', true),
+users_dev-# ('sadhvi', 'sadhvi@hmc.edu', true),
+users_dev-# ('sumi', 'sumi@pomona.edu', true);
+INSERT 0 9
+
+users_dev=# select * from users;
+ id | username |       email       | active
+----+----------+-------------------+--------
+  1 | abrar    | abrar@pomona.edu  | t
+  2 | sae      | sae@pomona.edu    | t
+  3 | asya     | asya@pomona.edu   | t
+  4 | yunju    | yunju@pomona.edu  | t
+  5 | dylan    | dylan@pomona.edu  | t
+  6 | oncel    | oncel@cmc.edu     | t
+  7 | landen   | landen@pomona.edu | t
+  8 | david    | david@pomona.edu  | t
+  9 | sadhvi   | sadhvi@hmc.edu    | t
+ 10 | sumi     | sumi@pomona.edu   | t
+(10 rows)
+
+// inserting a value by mistake
+users_dev=# INSERT INTO users (username, email, active) VALUES ('abrar', 'abrar@pomona.edu', true);
+INSERT 0 1
+
+users_dev=# select * from users;
+ id | username |       email       | active
+----+----------+-------------------+--------
+  1 | abrar    | abrar@pomona.edu  | t
+  2 | sae      | sae@pomona.edu    | t
+  3 | asya     | asya@pomona.edu   | t
+  4 | yunju    | yunju@pomona.edu  | t
+  5 | dylan    | dylan@pomona.edu  | t
+  6 | oncel    | oncel@cmc.edu     | t
+  7 | landen   | landen@pomona.edu | t
+  8 | david    | david@pomona.edu  | t
+  9 | sadhvi   | sadhvi@hmc.edu    | t
+ 10 | sumi     | sumi@pomona.edu   | t
+ 11 | abrar    | abrar@pomona.edu  | t
+(11 rows)
+
+// no worries, we can always delete it
+users_dev=# DELETE from users WHERE username = 'abrar' and id = '11';
+DELETE 1
+users_dev=# select * from users;
+ id | username |       email       | active
+----+----------+-------------------+--------
+  1 | abrar    | abrar@pomona.edu  | t
+  2 | sae      | sae@pomona.edu    | t
+  3 | asya     | asya@pomona.edu   | t
+  4 | yunju    | yunju@pomona.edu  | t
+  5 | dylan    | dylan@pomona.edu  | t
+  6 | oncel    | oncel@cmc.edu     | t
+  7 | landen   | landen@pomona.edu | t
+  8 | david    | david@pomona.edu  | t
+  9 | sadhvi   | sadhvi@hmc.edu    | t
+ 10 | sumi     | sumi@pomona.edu   | t
+(10 rows)
+```
