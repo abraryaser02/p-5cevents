@@ -59,3 +59,17 @@ body {
     background: #a8a8a8;
     color: #ffffff;
 }
+
+.search-bar-container { /* creating */
+    background-color: #e0e0e0;
+    position: absolute;
+    width: 100vw;
+    top: 80px;
+    left: 260px;
+    padding: 30px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+    min-width: 200px;
+}
