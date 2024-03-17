@@ -41,7 +41,13 @@ body {
     text-decoration: none;
 }
 
+#logo1 {
+    height: auto;
+    width: 200px;
+}
+
 .content {
     margin-left: 220px; /* Width of left bar + some margin */
     padding: 20px;
 }
+
