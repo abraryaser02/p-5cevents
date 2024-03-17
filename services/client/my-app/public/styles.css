@@ -39,9 +39,11 @@ body {
 .left-bar ul li a {
     color: #92956F;
     text-decoration: none;
+    border-radius: 30px;
+    padding: 6px 12px;
 }
 
-#logo1 {
+#logo1 { /* logo style setup */
     height: auto;
     width: 200px;
 }
@@ -51,3 +53,9 @@ body {
     padding: 20px;
 }
 
+.left-bar ul li a:hover, /* button hover effects */
+.left-bar ul li a.active
+{
+    background: #a8a8a8;
+    color: #ffffff;
+}
