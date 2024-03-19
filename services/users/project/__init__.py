@@ -39,3 +39,23 @@ def ping_pong():
         'status': 'success',
         'message': 'pong!'
     })
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    try:
+        # Query all users from the database
+        users = User.query.all()
+        # Convert each user into a dictionary
+        users_list = []
+        for user in users:
+            user_data = {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'active': user.active
+            }
+            users_list.append(user_data)
+        # Return a JSON response containing the list of user dictionaries
+        return jsonify(users_list)
+    except e:
+        return jsonify({'message': 'error retrieving users'})
