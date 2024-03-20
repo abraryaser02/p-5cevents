@@ -1,5 +1,5 @@
 version: '3.8'
-
+#-----------------------------
 services:
   users:
     container_name: users
@@ -21,7 +21,7 @@ services:
       - users-db
     links:
       - users-db
-
+#-----------------------------
   users-db:
     image: postgres:13
     container_name: users-db
@@ -33,7 +33,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-
+#-----------------------------
   events:
     container_name: events
     build:
@@ -62,7 +62,7 @@ services:
       context: ./services/events/project/db
       dockerfile: Dockerfile
     ports:
-      - 5438:5432
+      - 6546:6543
     environment:
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=postgres
