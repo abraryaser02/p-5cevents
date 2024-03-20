@@ -1,0 +1,29 @@
+FROM python:3.11.4
+
+# Install environment dependencies
+RUN apt-get update \
+    && apt-get -y install netcat-traditional \
+    && apt-get clean
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set working directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Add requirements
+RUN pip3 install --upgrade pip
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN pip install -r requirements.txt
+
+# Add entrypoint.sh
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Add app
+COPY . /usr/src/app
+
+# Run server
+CMD  ["./entrypoint.sh"]

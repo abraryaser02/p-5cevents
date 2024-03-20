@@ -34,3 +34,37 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  events:
+    container_name: events
+    build:
+      context: ./services/events
+      dockerfile: Dockerfile-dev
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - './services/events:/usr/src/app/'
+    ports:
+      - 5002:5000
+    environment:
+      - FLASK_APP=project/__init__.py
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@events-db:5432/events_dev
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@events-db:5432/events_test
+    depends_on:
+      - events-db
+    links:
+      - events-db
+#----------------------------
+  events-db:
+    image: postgress:13
+    container_name: events-db
+    build:
+      context: ./services/events/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5438:5432
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+
+
