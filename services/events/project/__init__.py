@@ -2,7 +2,9 @@
 
 
 import os
-import datetime
+from datetime import datetime, timedelta
+from random import choice
+from lorem_text import lorem
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
@@ -23,9 +25,15 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
+    organizer = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, description, time, organizer):
         self.name = name
+        self.description = description
+        self.time = time
+        self.organizer = organizer
 
 # routes
 @app.route('/events/ping', methods=['GET'])
@@ -43,7 +51,10 @@ def get_events():
     for event in events:
         event_data = {
             'id': event.id,
-            'name': event.name
+            'name': event.name,
+            'description': event.description,
+            'time': event.time,
+            'organizer': event.organizer
         }
         events_list.append(event_data)
     return jsonify(events_list)
@@ -52,11 +63,13 @@ def get_events():
 @app.route('/events', methods=['POST'])
 def create_event():
     data = request.get_json()
-    if 'name' not in data:
-        return jsonify({'error': 'Missing name parameter'}), 400
 
     name = data['name']
-    new_event = Event(name=name)
+    description = data['description']
+    time = data['time']
+    organizer = data['organizer']
+
+    new_event = Event(name=name, description=description, time=time, organizer=organizer)
 
     try:
         db.session.add(new_event)
@@ -66,7 +79,17 @@ def create_event():
         db.session.rollback()
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
 
-# curl -X POST \ -H "Content-Type: application/json" \ -d "{\"name\": \"Your Event Name\"}" \ http://localhost:5002/events
+''' 
+curl -X POST http://localhost:5002/events \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "Event Name",
+  "description": "Event Description",
+  "time": "2024-03-22T15:30:00",
+  "organizer": "Event Organizer"
+}'
+
+'''
 
 # route for deleting an event
 @app.route('/events/<int:event_id>', methods=['DELETE'])
@@ -84,3 +107,29 @@ def delete_event(event_id):
         return jsonify({'error': 'Failed to delete event', 'details': str(e)}), 500
 
 # curl -X DELETE http://localhost:5002/events/<id>
+    
+
+# testing purposes
+@app.route('/events/test', methods=['GET'])
+def geneate_events():
+    organizations = ['Pomona College', 'CMC', 'Scripps', 'HMC', 'Pitzer College']
+
+    name = lorem.words(3)
+    description = lorem.words(10)
+    time = datetime.now() + timedelta(days=choice(range(1, 30)))
+    organizer = choice(organizations)
+
+    new_event = Event(name=name, description=description, time=time, organizer=organizer)
+
+    db.session.add(new_event)
+    db.session.commit()
+    return jsonify({'message': 'Test events created successfully'})
+
+
+'''
+- microservices structure
+- one database vs multiple for each service (forein keys )
+- structuring directories (ie. routes, models, )
+- should we use flask blueprints (modularity/reusability) vs multiple flask apps in docker
+
+'''
