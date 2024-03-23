@@ -1,32 +1,32 @@
 version: '3.8'
 #-----------------------------
 services:
-  users:
-    container_name: users
+  backend:
+    container_name: backend
     build:
-      context: ./services/users
+      context: ./services/backend
       dockerfile: Dockerfile-dev
     command: python manage.py run -h 0.0.0.0
     volumes:
-      - ./services/users/:/usr/src/app/
+      - ./services/backend/:/usr/src/app/
     ports:
       - 5001:5000
     environment:
       - FLASK_APP=project/__init__.py
       - FLASK_DEBUG=1
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgresql://postgres:postgres@users-db:5432/users_dev
-      - DATABASE_TEST_URL=postgresql://postgres:postgres@users-db:5432/users_test
+      - DATABASE_URL=postgresql://postgres:postgres@backend-db:5432/backend_dev
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@backend-db:5432/backend_test
     depends_on:
-      - users-db
+      - backend-db
     links:
-      - users-db
+      - backend-db
 #-----------------------------
-  users-db:
+  backend-db:
     image: postgres:13
-    container_name: users-db
+    container_name: backend-db
     build:
-      context: ./services/users/project/db
+      context: ./services/backend/project/db
       dockerfile: Dockerfile
     ports:
       - 5435:5432
@@ -34,37 +34,5 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
-  events:
-    container_name: events
-    build:
-      context: ./services/events
-      dockerfile: Dockerfile-dev
-    command: python manage.py run -h 0.0.0.0
-    volumes:
-      - './services/events:/usr/src/app/'
-    ports:
-      - 5002:5000
-    environment:
-      - FLASK_APP=project/__init__.py
-      - FLASK_DEBUG=1
-      - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgresql://postgres:postgres@events-db:5432/events_dev
-      - DATABASE_TEST_URL=postgresql://postgres:postgres@events-db:5432/events_test
-    depends_on:
-      - events-db
-    links:
-      - events-db
-#----------------------------
-  events-db:
-    image: postgress:13
-    container_name: events-db
-    build:
-      context: ./services/events/project/db
-      dockerfile: Dockerfile
-    ports:
-      - 6546:6543
-    environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
 
 
