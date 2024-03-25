@@ -111,6 +111,7 @@ def get_event(event_id):
         }
     return jsonify(event_data)
 
+# get event name
 @app.route('/get_event/<int:event_id>/name', methods=['GET'])
 def get_event_name(event_id):
     event = Event.query.get(event_id)
@@ -118,6 +119,7 @@ def get_event_name(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'name': event.name})
 
+# get event description
 @app.route('/get_event/<int:event_id>/description', methods=['GET'])
 def get_event_description(event_id):
     event = Event.query.get(event_id)
@@ -125,6 +127,7 @@ def get_event_description(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'description': event.description})
 
+# get event location
 @app.route('/get_event/<int:event_id>/location', methods=['GET'])
 def get_event_location(event_id):
     event = Event.query.get(event_id)
@@ -132,6 +135,7 @@ def get_event_location(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'location': event.location})
 
+# get event time
 @app.route('/get_event/<int:event_id>/time', methods=['GET'])
 def get_event_time(event_id):
     event = Event.query.get(event_id)
@@ -139,6 +143,7 @@ def get_event_time(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'time': event.time})
 
+# get event organization
 @app.route('/get_event/<int:event_id>/organization', methods=['GET'])
 def get_event_organization(event_id):
     event = Event.query.get(event_id)
@@ -197,7 +202,7 @@ def delete_event(event_id):
 # curl -X DELETE http://localhost:5002/events/<id>
     
 
-# testing purposes
+# generate a test event
 @app.route('/test_event', methods=['GET'])
 def geneate_events():
     organizations = ['Pomona College', 'CMC', 'Scripps', 'HMC', 'Pitzer College']
