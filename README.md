@@ -2,19 +2,19 @@
 
 ## Endpoints
 
-# Generate a test event (refresh page to create multiple random events)
+### Generate a test event (refresh page to create multiple random events)
 
 `http://localhost:5001/get_event/id`
 
-# Get all events
+### Get all events
 
 `http://localhost:5001/all_events`
 
-# Get event by id (ex. 1)
+### Get event by id (ex. 1)
 
 `http://localhost:5001/get_event/id`
 
-# Get event attribute (ex. name)
+### Get event attribute (ex. name)
 
 `http://localhost:5001/get_event/id/name`
 
@@ -22,7 +22,7 @@ Attributes
 
 name, description, location, time, organization
 
-# Delete an event
+### Delete an event
 
 `http://localhost:5001/delete_event/id`
 `
