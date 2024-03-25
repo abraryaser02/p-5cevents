@@ -109,7 +109,6 @@ function EventPage() {
         </div>
       )}
     </div>
-    // submitted part doesnt work for some reasonnnnnnn.......
   );
 }
 
