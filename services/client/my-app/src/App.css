@@ -1,18 +1,190 @@
-.App {
-  text-align: center;
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #F7F7F7;
+  font-family: Arial, sans-serif;
+}
+
+/* Top bar styles */
+.top-bar {
+  background-color: #ffffff;
+  color: #2B4B1E;
+  padding-left: 30px;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  left: 205px;
+  width: calc(100% - 205px); /* Adjust width to account for left bar */
+  height: 70px;
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center vertically */
+}
+
+.top-bar h1 {
+  margin: 0;
+}
+
+#logo1 {
+  height: 100px; /* Adjust logo height as needed */
+  width: auto; /* Maintain aspect ratio */
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+/* Left bar styles */
+.left-bar {
+  background-color: #ffffff;
+  color: #fff;
+  width: 200px;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 30px;
+}
+
+.left-bar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-bar ul li {
+  margin-bottom: 10px;
+}
+
+.left-bar ul li a {
+  color: #92956F;
+  text-decoration: none;
+  border-radius: 30px;
+  padding: 6px 12px;
+}
+
+.left-bar ul li a:hover,
+.left-bar ul li a.active {
+  background: #a8a8a8;
+  color: #ffffff;
+}
+
+/* Content styles */
+.content {
+  margin-left: 200px;
+  padding: 20px;
 }
 
 .App-header {
-  background-color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  text-align: center;
+  margin-top: 200px; /* Adjust as needed */
 }
 
-.App-link {
-  color: #ffffff;
+.App-header h2 {
+  font-size: 24px; /* Adjust as needed */
+  color: #333; /* Adjust as needed */
 }
+
+.App-header p {
+  font-size: 16px; /* Adjust as needed */
+  color: #666; /* Adjust as needed */
+}
+
+/* Search bar container styles */
+.search-bar-container {
+  background-color: #e0e0e0;
+  position: absolute;
+  width: calc(100vw - 260px); /* 100vw minus left bar width */
+  top: 80px;
+  left: 260px;
+  padding: 30px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+/* Create event popup styles */
+.create-event-popup {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center horizontally and vertically */
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+/* Submit button styles */
+.create-event-popup button {
+  margin-top: 10px; /* Add spacing between button and form */
+}
+
+/* Adjust left bar button position */
+.left-bar button {
+  position: relative;
+  z-index: 2; /* Ensure it's above other content */
+}
+
+.search-bar-container { /* creating */
+  background-color: #e0e0e0;
+  position: absolute;
+  width: 100vw;
+  top: 80px;
+  left: 260px;
+  padding: 30px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+
+  min-width: 200px;
+}
+
+/* Button styles */
+.dropbtn {
+  background-color: #939393;
+  color: rgb(0, 0, 0);
+  padding-right: 68px;
+  padding-top: 15px;
+  padding-left: 20px;
+  padding-bottom: 15px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+
+  border-radius: 30px; /* Rounded corners */
+}
+
+/* position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  top: 620px;
+  left: 30px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  bottom: 100%;
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
