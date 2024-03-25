@@ -162,7 +162,7 @@ def create_event():
     time = data['time']
     organization = data['organization']
 
-    new_event = Event(name=name, description=description, time=time, organizer=organizer)
+    new_event = Event(name=name, description=description, location=location, time=time, organization=organization)
 
     try:
         db.session.add(new_event)
