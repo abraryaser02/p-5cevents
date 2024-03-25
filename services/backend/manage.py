@@ -1,4 +1,4 @@
-# services/users/manage.py
+# services/backend/manage.py
 
 
 from flask.cli import FlaskGroup

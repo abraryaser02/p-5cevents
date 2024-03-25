@@ -1,5 +1,32 @@
 # Welcome to p-5cevents!
 
+## Endpoints
+
+#### Generate a test event (refresh page to create multiple random events)
+
+`http://localhost:5001/get_event/id`
+
+#### Get all events
+
+`http://localhost:5001/all_events`
+
+#### Get event by id (ex. 1)
+
+`http://localhost:5001/get_event/id`
+
+#### Get event attribute (ex. name)
+
+`http://localhost:5001/get_event/id/name`
+
+Attributes
+
+name, description, location, time, organization
+
+#### Delete an event
+
+`http://localhost:5001/delete_event/id`
+`
+
 ## Overview
 
 p-5cevents is a full-stack web app with a Flask backend running on a Postgres database with React on the front-end. We will be dockerizing our app as we build it and have it production-ready using Gunicorn, Nginx, and DigitalOcean.
@@ -26,7 +53,7 @@ To recreate the database you can run the following command:
 
 ```
 docker-compose -f docker-compose-dev.yml \
-  run users python manage.py recreate_db
+  run backend python manage.py recreate-db
 ```
 This command recreates our PostgreSQL database using `manage.py`, where we can define custom CLI (Command Line Interface) using Flask-CLI. In short, you can create your own fun commands and tell docker what to do! In this case, we are just telling it to re-create our database for us.
 
