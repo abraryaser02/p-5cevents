@@ -13,6 +13,7 @@ Get event by id (ex. 1)
 Get event attribute (ex. name)
 
 `http://localhost:5001/get_event/id/name`
+
 Attributes
 
 name, description, location, time, organization
