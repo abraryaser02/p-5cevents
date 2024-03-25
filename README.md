@@ -3,14 +3,18 @@
 ## Endpoints
 
 Get all events
+
 `http://localhost:5001/all_events`
 
-Get event by id (ie 1)
+Get event by id (ex. 1)
+
 `http://localhost:5001/get_event/id`
 
-Get event attribute (ie name)
+Get event attribute (ex. name)
+
 `http://localhost:5001/get_event/id/name`
-Attributes;
+Attributes
+
 name, description, location, time, organization
 `
 
