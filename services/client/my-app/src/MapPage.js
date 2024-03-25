@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './App.css'; // Import the app.css file
 import logo from './logo-1.png';
 
@@ -11,9 +12,9 @@ function MapPage() {
       <div className="left-bar">
       <img src={logo} alt="Logo" id="logo1" /> {/* Include the logo */}
         <ul>
-          <li><a href="/EventPage.js">Events</a></li>
-          <li><a href="/CalendarPage.js">Calendar</a></li>
-          <li><a href="/MapPage.js">Map</a></li>
+        <li><Link to="/events">Events</Link></li>
+        <li><Link to="/calendar">Calendar</Link></li>
+        <li><Link to="/map">Map</Link></li>
         </ul>
       </div>
       <header className="App-header">
