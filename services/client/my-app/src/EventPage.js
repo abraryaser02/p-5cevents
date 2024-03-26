@@ -92,7 +92,7 @@ function EventPage() {
       )}
       <header className="App-header">
       <h2>Events Page</h2>
-        <p>This is the evnets page content.</p>
+        <p>This is the events page content.</p>
       </header>
     </div>
   );

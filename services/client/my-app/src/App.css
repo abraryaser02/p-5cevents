@@ -119,10 +119,54 @@ body {
   transform: translate(-50%, -50%); /* Center horizontally and vertically */
   z-index: 1000; /* Ensure it's on top of other content */
 }
+/* CSS for form labels and inputs */
+.create-event-popup label {
+  display: block;
+  margin-bottom: 10px;
+}
 
-/* Submit button styles */
-.create-event-popup button {
-  margin-top: 10px; /* Add spacing between button and form */
+.create-event-popup input[type="text"],
+.create-event-popup input[type="date"],
+.create-event-popup textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+/* CSS for submit button */
+.create-event-popup button[type="submit"] {
+  background-color: #92956F;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-event-popup button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* CSS for thank you message and create another event button */
+.create-event-popup .thank-you-message {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.create-event-popup .thank-you-message button {
+  background-color: #008CBA;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-event-popup .thank-you-message button:hover {
+  background-color: #0073e6;
 }
 
 /* Adjust left bar button position */
