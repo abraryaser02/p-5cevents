@@ -1,5 +1,5 @@
 // Import React and useState hook from the 'react' package
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Import Link component from 'react-router-dom' package for navigation
 import { Link } from 'react-router-dom';
@@ -18,28 +18,76 @@ function EventPage() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [organization, setOrganizatoin] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [events, setEvents] = useState([]); // State to hold fetched events
+
+  //fetching data from the backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/all_events'); 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setEvents(data); // Store fetched data in state
+      } catch (error) {
+        console.error('There was a problem fetching the event data:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []); 
+
+  // Function to post event data to the backend
+  const postEventData = async (eventData) => {
+    try {
+      const response = await fetch('http://localhost:3000/create_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        console.log('Event created successfully:', await response.json());
+        setSubmitted(true);
+        // Reset form fields
+        setEventName('');
+        setDate('');
+        setLocation('');
+        setDescription('');
+        setOrganizatoin('');
+        setShowCreateEventPopup(false);
+      }
+    } catch (error) {
+      console.error('Error submitting event:', error);
+    }
+  };
+
 
   // Function to toggle the event creation popup
   const toggleCreateEventPopup = () => {
     setShowCreateEventPopup(!showCreateEventPopup);
   };
 
-  // Function to handle event submission
   const handleSubmitEvent = (e) => {
     e.preventDefault();
-    // Log event data to the console
-    console.log('Event submitted:', { eventName, date, location, description });
-    // Reset form fields
-    setEventName('');
-    setDate('');
-    setLocation('');
-    setDescription('');
-    // Set submitted state to true
-    setSubmitted(true);
-    // Close the popup after submission
-    setShowCreateEventPopup(false);
+    const eventData = {
+      name: eventName,
+      date: date,
+      location: location,
+      description: description,
+      organization: organization,
+    };
+    // Call the function to post event data
+    postEventData(eventData);
+    setShowCreateEventPopup(false); // Close the popup after submission
   };
+
 
   // Return JSX for rendering
   return (
@@ -113,13 +161,28 @@ function EventPage() {
               <button onClick={() => setSubmitted(false)}>Create Another Event</button>
             </div>
           )}
+        
         </div>
       )}
+      <div className="events-list">
+        
+      </div>
+
 
       {/* Page header */}
       <header className="App-header">
-        <h2>Events Page</h2>
-        <p>This is the events page content.</p>
+      <h2>Upcoming Events</h2>
+        <ul>
+          {events.map(event => (
+            <li key={event.id}>
+              <h3>{event.name}</h3>
+              <p>{event.description}</p>
+              <p>Location: {event.location}</p>
+              <p>Time: {new Date(event.time).toLocaleString()}</p>
+              <p>Organization: {event.organization}</p>
+            </li>
+          ))}
+        </ul>
       </header>
     </div>
   );
