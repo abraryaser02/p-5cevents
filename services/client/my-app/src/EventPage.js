@@ -26,7 +26,7 @@ function EventPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:3000/all_events'); 
+        const response = await fetch('http://localhost:5001/all_events'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -43,7 +43,7 @@ function EventPage() {
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
     try {
-      const response = await fetch('http://localhost:3000/create_event', {
+      const response = await fetch('http://localhost:3000/create_event', { // wrong endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
