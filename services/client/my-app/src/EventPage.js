@@ -106,7 +106,7 @@ function EventPage() {
           <li><Link to="/events">Events</Link></li>
           <li><Link to="/calendar">Calendar</Link></li>
           <li><Link to="/map">Map</Link></li>
-          <li><button onClick={toggleCreateEventPopup}>Create Event</button></li>
+          <li><button type= "event-button" button onClick={toggleCreateEventPopup}>Create Event</button></li>
         </ul>
       </div>
 
