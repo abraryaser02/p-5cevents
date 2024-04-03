@@ -195,6 +195,11 @@ body {
   transform: rotate(90deg); /* Diagonal line */
 }
 
+.left-bar button:hover {
+  background-color: #45a049;
+}
+
+
 .search-bar-container { /* creating */
   background-color: #e0e0e0;
   position: absolute;
