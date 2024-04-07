@@ -24,13 +24,16 @@ db = SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    school = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
 
-    def __init__(self, username, email):
+    def __init__(self, username, email, password, school):
         self.username = username
         self.email = email
+        self.password = password
+        self.school = school
 
 class Event(db.Model):
     __tablename__ = "events"
@@ -67,9 +70,9 @@ def get_users():
         for user in users:
             user_data = {
                 'id': user.id,
-                'username': user.username,
                 'email': user.email,
-                'active': user.active
+                'password': user.password,
+                'school': user.school
             }
             users_list.append(user_data)
         # Return a JSON response containing the list of user dictionaries
