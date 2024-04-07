@@ -1,5 +1,11 @@
+// TODO: 
+// style login page
+// Create button for signing out, create page to display once user signs out
+// Create profile icon
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import './App.css'; // Import the app.css file
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -24,9 +30,9 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="login-container"> {/* Add the login-container class here */}
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <form className="login-form" onSubmit={handleLogin}>
         <label>
           Email:
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
