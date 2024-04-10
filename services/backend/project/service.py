@@ -8,9 +8,11 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
 
-
+# import the databases
 from server import Users
 from server import Events
+
+
 # instantiate the app
 app = Flask(__name__)
 
