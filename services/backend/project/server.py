@@ -35,3 +35,8 @@ class Event(db.Model):
         self.time = time
         self.organization = organization
 
+class User_To_Event(db.Model):
+    __talename__ = "user_to_events"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)   
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
