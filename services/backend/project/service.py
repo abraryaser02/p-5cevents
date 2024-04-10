@@ -8,7 +8,7 @@ from flask import Flask, jsonify, request
 from project import app
 
 # import the databases
-from server import db
+from .server import db, User, Event
 
 # routes
 @app.route('/users/ping', methods=['GET'])
