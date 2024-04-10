@@ -5,24 +5,10 @@ from datetime import datetime, timedelta
 from random import choice
 from lorem_text import lorem
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-
+from project import app
 
 # import the databases
-from server import Users
-from server import Events
-
-
-# instantiate the app
-app = Flask(__name__)
-
-
-# set configuration
-app_settings = os.getenv('APP_SETTINGS')
-app.config.from_object(app_settings)
-
-# instantiate the database
-db = SQLAlchemy(app)
+from server import db
 
 # routes
 @app.route('/users/ping', methods=['GET'])
