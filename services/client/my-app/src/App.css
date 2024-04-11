@@ -119,17 +119,86 @@ body {
   transform: translate(-50%, -50%); /* Center horizontally and vertically */
   z-index: 1000; /* Ensure it's on top of other content */
 }
-
-/* Submit button styles */
-.create-event-popup button {
-  margin-top: 10px; /* Add spacing between button and form */
+/* CSS for form labels and inputs */
+.create-event-popup label {
+  display: block;
+  margin-bottom: 10px;
 }
 
-/* Adjust left bar button position */
+.create-event-popup input[type="text"],
+.create-event-popup input[type="date"],
+.create-event-popup textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+/* CSS for submit button */
+.create-event-popup button[type="submit"] {
+  background-color: #92956F;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+.create-event-popup button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* CSS for thank you message and create another event button */
+.create-event-popup .thank-you-message {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.create-event-popup .thank-you-message button {
+  background-color: #008CBA;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-event-popup .thank-you-message button:hover {
+  background-color: #0073e6;
+}
+
+/* Adjust left bar button position and styles */
 .left-bar button {
   position: relative;
   z-index: 2; /* Ensure it's above other content */
+  background-color: #92956F;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  top: 300px;
+  overflow: hidden;
+  font-size: 15px;
 }
+.left-bar button::after {
+  content: ''; 
+  position: absolute; 
+  left: -40%; /* Start from the left */
+  top: 50%;
+  width: 100%; 
+  height: 2px; /* Line thickness */
+  background-color: rgb(255, 255, 255); /* Line color */
+  transform: rotate(90deg); /* Diagonal line */
+}
+
+.left-bar button:hover {
+  background-color: #45a049;
+}
+
 
 .search-bar-container { /* creating */
   background-color: #e0e0e0;
@@ -186,5 +255,54 @@ body {
   display: block;
 }
 
+
+
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Login.css */
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: rgb(0, 0, 0);
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #286a11;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #184009;
+}
+
+
+
