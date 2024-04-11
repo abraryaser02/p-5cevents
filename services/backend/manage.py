@@ -3,7 +3,8 @@
 
 from flask.cli import FlaskGroup
 
-from project import app, db
+from project import app
+from project.server import db
 
 
 cli = FlaskGroup(app)

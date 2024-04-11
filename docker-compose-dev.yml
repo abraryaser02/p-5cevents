@@ -28,11 +28,13 @@ services:
     build:
       context: ./services/backend/project/db
       dockerfile: Dockerfile
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
     ports:
       - 5435:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
-
-
+volumes:
+  postgres_volume:
