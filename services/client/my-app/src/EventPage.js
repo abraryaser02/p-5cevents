@@ -1,5 +1,5 @@
 // Import React and useState hook from the 'react' package
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Import Link component from 'react-router-dom' package for navigation
 import { Link } from 'react-router-dom';
@@ -9,6 +9,9 @@ import './App.css'; // Import the app.css file
 
 // Import logo image
 import logo from './logo-1.png';
+
+// Import ProfileIcon component
+import ProfileIcon from './ProfileIcon';
 
 // Define the EventPage component
 function EventPage() {
@@ -90,11 +93,14 @@ function EventPage() {
 
 
   // Return JSX for rendering
+  const imageUrl = './profileimg.png';
   return (
     <div className="App">
       {/* Navigation bar */}
       <div className="top-bar">
         <h1>Events</h1>
+        {/* Profile icon */}
+        <ProfileIcon imageUrl={imageUrl} />
       </div>
 
       {/* Left bar */}

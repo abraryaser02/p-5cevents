@@ -148,7 +148,7 @@ body {
 
 
 .create-event-popup button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #253e0d;
 }
 
 /* CSS for thank you message and create another event button */
@@ -196,7 +196,7 @@ body {
 }
 
 .left-bar button:hover {
-  background-color: #45a049;
+  background-color: #253e0d;
 }
 
 
@@ -293,7 +293,7 @@ body {
 .login-form button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #286a11;
+  background-color: #253e0d;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -306,3 +306,18 @@ body {
 
 
 
+/* ProfileIcon.css */
+
+.profile-icon-container {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 999; /* Ensure the icon is above other content */
+}
+
+.profile-icon-container img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover; /* Set object-fit property here */
+}
