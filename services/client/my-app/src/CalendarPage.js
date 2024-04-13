@@ -15,6 +15,7 @@ function CalendarPage() {
         <li><Link to="/events">Events</Link></li>
         <li><Link to="/calendar">Calendar</Link></li>
         <li><Link to="/map">Map</Link></li>
+        <li><Link to="/about">About</Link></li>
         </ul>
       </div>
       <header className="App-header">
