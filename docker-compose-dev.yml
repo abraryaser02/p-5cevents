@@ -34,14 +34,15 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
-  react-app:
+  client:
+    container_name: client
     build:
-      context: .
+      context: ./services/client
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app
+      - ./services/client:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development
