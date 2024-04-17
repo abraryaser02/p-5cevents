@@ -1,8 +1,3 @@
-// TODO: 
-// style login page
-// Create button for signing out, create page to display once user signs out
-// Create profile icon
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import './App.css'; // Import the app.css file
