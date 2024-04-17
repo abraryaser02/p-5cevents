@@ -35,14 +35,14 @@ services:
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
   client:
-    container_name: client
+    container_name: my-app
     build:
-      context: ./services/client
-      dockerfile: Dockerfile
+      context: ./services/client/my-app/
+      dockerfile: Dockerfile-dev2
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
-      - ./services/client:/usr/src/app
+      - ./services/client/my-app:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development

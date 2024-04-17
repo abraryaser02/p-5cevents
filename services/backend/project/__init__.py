@@ -6,9 +6,15 @@ from random import choice
 from lorem_text import lorem
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 
 # instantiate the app
 app = Flask(__name__)
+CORS(app)
+
+
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 # set configuration
@@ -173,7 +179,7 @@ def create_event():
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
 
 '''
-curl -X POST http://localhost:5002/events \
+curl -X POST http://localhost:5001/events \
 -H "Content-Type: application/json" \
 -d '{
   "name": "Event Name",
@@ -218,4 +224,7 @@ def geneate_events():
     db.session.add(new_event)
     db.session.commit()
     return jsonify({'message': 'Test events created successfully'})
-    
+
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
