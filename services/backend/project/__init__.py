@@ -179,7 +179,7 @@ def create_event():
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
 
 '''
-curl -X POST http://localhost:5001/events \
+curl -X POST http://localhost:5001/create_event \
 -H "Content-Type: application/json" \
 -d '{
   "name": "Event Name",
