@@ -36,5 +36,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
+<<<<<<< HEAD
 volumes:
   postgres_volume:
+=======
+  client:
+    container_name: my-app
+    build:
+      context: ./services/client/my-app/
+      dockerfile: Dockerfile-dev2
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./services/client/my-app:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm start
+
+
+
+>>>>>>> newDylanYunju

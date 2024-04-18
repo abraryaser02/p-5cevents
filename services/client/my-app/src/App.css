@@ -45,7 +45,7 @@ body {
   color: #fff;
   width: 200px;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   padding: 30px;
@@ -80,9 +80,10 @@ body {
 }
 
 .App-header {
-  text-align: center;
-  margin-top: 200px; /* Adjust as needed */
+  margin: 200px auto;
+  width: fit-content; /* Set width to fit content horizontally */
 }
+
 
 .App-header h2 {
   font-size: 24px; /* Adjust as needed */
@@ -93,6 +94,74 @@ body {
   font-size: 16px; /* Adjust as needed */
   color: #666; /* Adjust as needed */
 }
+
+
+/* About.css */
+
+.About-header {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  width: 80%; 
+  max-width: fit-content;
+  margin-top: 100px ; 
+  margin-left: 250px ;
+  text-align: center; 
+}
+
+.About-header h2 {
+  font-size: 32px;
+  color: #333; 
+  margin-bottom: 20px; 
+}
+
+.About-header p {
+  font-size: 18px; 
+  color: #666; 
+  line-height: 30px;
+  margin-bottom: 10px;
+}
+
+.About-team {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  width: 80%; 
+  max-width: 800px;
+  margin-top: 30px ; 
+  margin-left: 460px ;
+  text-align: center; 
+}
+
+.About-team h2 {
+  font-size: 28px;
+  color: #333;
+  margin-top: 30px;
+}
+
+.About-team h3 {
+  font-size: 24px;
+  line-height: 30px;
+  margin-bottom: 20px;
+  margin-top: 60px;
+}
+
+.About-team h4 {
+  font-size: 24px;
+  line-height: 30px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.About-team p {
+  font-size: 18px; 
+  color: #666; 
+  line-height: 30px;
+  margin-bottom: 10px;
+}
+
 
 /* Search bar container styles */
 .search-bar-container {
@@ -148,7 +217,7 @@ body {
 
 
 .create-event-popup button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #253e0d;
 }
 
 /* CSS for thank you message and create another event button */
@@ -196,7 +265,7 @@ body {
 }
 
 .left-bar button:hover {
-  background-color: #45a049;
+  background-color: #253e0d;
 }
 
 
@@ -293,7 +362,7 @@ body {
 .login-form button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #286a11;
+  background-color: #253e0d;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -306,3 +375,18 @@ body {
 
 
 
+/* ProfileIcon.css */
+
+.profile-icon-container {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 999; /* Ensure the icon is above other content */
+}
+
+.profile-icon-container img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover; /* Set object-fit property here */
+}

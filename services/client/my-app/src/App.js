@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AboutPage from './AboutPage';
 import CalendarPage from './CalendarPage';
 import EventPage from './EventPage';
 import LoginPage from './Login';
@@ -15,6 +16,7 @@ function App() {
           <Route path="/Events" element={<EventPage />} />
           <Route path="/Calendar" element={<CalendarPage />} />
           <Route path="/Map" element={<MapPage />} />
+          <Route path='/About' element={<AboutPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* This route will be matched for any other route */}
         </Routes>
       </div>
