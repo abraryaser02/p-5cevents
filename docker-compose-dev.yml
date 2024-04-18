@@ -36,10 +36,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 #-----------------------------
-<<<<<<< HEAD
-volumes:
-  postgres_volume:
-=======
   client:
     container_name: my-app
     build:
@@ -54,6 +50,9 @@ volumes:
       - NODE_ENV=development
     command: npm start
 
+#-----------------------------
+volumes:
+  postgres_volume:
 
 
->>>>>>> newDylanYunju
+
