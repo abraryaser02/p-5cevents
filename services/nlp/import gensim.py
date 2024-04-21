@@ -1,5 +1,5 @@
-from gensim.models import Word2Vec
 import gensim
+from gensim.models import Word2Vec
 import re
 
 
@@ -21,7 +21,9 @@ nltk.download()
 nltk.download('punkt')  # Download the Punkt tokenizer models if not already downloaded
 from nltk.tokenize import sent_tokenize
 
-paragraph = "Goal motivation & Free snacks with Pomona Sagefellows! Stop by our table at the SCC this Friday (3/22) between 11am-1pm for free snacks & goal-setting resources. Come add your goals to a community board & celebrate the semester. Queer Student Testimonies - Claremont Christian Fellowship Everyone is welcome at Friday Fellowship this week as we hear from some of our queer members about how their faith and sexuality have intersected. Doms Lounge 3/22 at 7pm. Free tacos after the meeting! Walker Flea Market & Free Boba from 5C Plant-Based! Buy homemade, student-created items from 5C students at the Walker Flea Market on Friday, March 22 from 4-7pm at Walker Beach. Items sold will include clothes, crochet creations, handmade jewelry, and art prints. Practice sustainability by enjoying a plant milk-based boba in a reusable cup paid for by the Pomona EcoReps! Psychology Research Study Participation for Credit and/or Raffle Entry Participate in my online senior thesis study on young adults' experiences of spending time alone! Earn 0.5 research participation credits if eligible and be entered into a raffle to receive one of three $40 VISA gift cards. And, spend some time reflecting on the alone-time in your life! The survey only takes about 20 minutes. If you would like to participate, click the link below to access the survey. https://pitzer.co1.qualtrics.com/jfe/form/SV_8jlGJrL1uY3YwNE Thank you! The Pomona Student Union Presents... What Is College For? Um... Why are we here? What are we doing? What is this all for, really? Join Professor Susan McWilliams Barndt, Professor Guillermo Douglass-Jaimes, & Professor Stef Torralba for a critical discussion of the purpose of college. Possible topics include the role of the liberal arts college, elitism & diversity, organizing & the classroom, and more. When: Thursday, March 21st, at 7:00 PM in Edmunds Ballroom Perks: Free (Sunright!) boba and Caylor's cookies"
+with open("/Users/sadhvinarayanan/Downloads/hivDist/openai-env/chirp_output2.txt", "rb") as f:
+    text = f.read().decode("utf-8")
+paragraph = text
 
 sentences = sent_tokenize(paragraph)
 
@@ -54,7 +56,7 @@ word2vec_model = Word2Vec(corpus, min_count=1, vector_size = 70)
 
 
 # Keywords for event tagging
-keywords = ['academic', 'fellowship', 'workshop', 'seminar', 'conference', 'symposium', 'panel discussion', 'lecture', 'workshop series', 'career fair', 'networking', 'cultural event', 'social event', 'club meeting', 'volunteer opportunity', 'orientation', 'recruitment', 'sports event', 'fundraising', 'celebration', 'health & wellness']
+keywords = ['academic', 'computer science', 'humanities', 'fellowship', 'protest', 'social justice', 'workshop', 'seminar', 'conference', 'symposium', 'panel', 'lecture', 'workshop series', 'career fair', 'networking', 'cultural', 'social', 'club', 'volunteer', 'orientation', 'recruitment', 'sports', 'party', 'wellness']
 
 # Create vector embeddings for keywords
 keyword_embeddings = {}
@@ -68,8 +70,9 @@ for keyword in keywords:
         keyword_embeddings[keyword] = sum(keyword_embedding) / len(keyword_embedding)
 
 # Event description
-event_description = "Fellowship Information Dinner @ Frank Blue Room, Wed, 3/20 from 5:15 - 6:15 PM What exactly is a fellowship? How do you apply for one? When can you apply for one? Get your answers to these questions from the CDO Fellowship Advisor Jason Jeffrey"
-
+#event_description = "Fellowship Information Dinner @ Frank Blue Room, Wed, 3/20 from 5:15 - 6:15 PM What exactly is a fellowship? How do you apply for one? When can you apply for one? Get your answers to these questions from the CDO Fellowship Advisor Jason Jeffrey"
+#event_description = "Last Friday Claremont Police arrested 20 students at Pomona College who were conducting a sit-in, charging them with trespassing and obstruction of justice. Join Professors Shields and Kim for a discussion over this event's implications for student activism and institutional responses during Ath Tea at Adams Courtyard at the Athenaeum from 3 - 4:30 PM this Friday, April 12."
+event_description = "Come talk to the Computer Science professors in the pannel for understanding computer science course registration"
 # Preprocess the event description
 event_description = event_description.lower().split()
 
@@ -89,8 +92,12 @@ for keyword, embedding in keyword_embeddings.items():
 sorted_keywords = sorted(similarity_scores.items(), key=lambda x: x[1], reverse=True)
 
 # Print top N keywords
-N = 5  # Number of top keywords to print
+N = 10  # Number of top keywords to print
 top_keywords = sorted_keywords[:N]
+#subject
+#lower case all subjects
+#lowercase event, and check to see what subjects are in event
+#print out subjects
 print("Top keywords for tagging the event:")
 for keyword, similarity in top_keywords:
     print(f"- {keyword}: {similarity}")
