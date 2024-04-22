@@ -33,13 +33,10 @@ class User(db.Model):
     username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
-    # Define the relationship with events
-    participants = db.relationship('Event', secondary='user_to_event', backref='users')
 
     def __init__(self, username, email):
         self.username = username
         self.email = email
-
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -48,8 +45,6 @@ class Event(db.Model):
     location = db.Column(db.Text, nullable=False)
     time = db.Column(db.DateTime, nullable=False)
     organization = db.Column(db.String(100), nullable=False)
-    # Define the relationship with users
-    participants = db.relationship('User', secondary='user_to_event', backref='events')
 
     def __init__(self, name, description, location, time, organization):
         self.name = name
@@ -57,6 +52,11 @@ class Event(db.Model):
         self.location = location
         self.time = time
         self.organization = organization
+class User_To_Event(db.Model):
+    __tablename__ = "user_to_event"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
 
 class User_To_Event(db.Model):
@@ -66,7 +66,8 @@ class User_To_Event(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
 
-# routes
+#----------user routes-----------
+
 @app.route('/users/ping', methods=['GET'])
 def ping_pong():
     return jsonify({
@@ -74,7 +75,7 @@ def ping_pong():
         'message': 'pong!'
     })
 
-@app.route('/users', methods=['GET'])
+@app.route('/all_users', methods=['GET'])
 def get_users():
     try:
         # Query all users from the database
@@ -93,7 +94,36 @@ def get_users():
         return jsonify(users_list)
     except e:
         return jsonify({'message': 'error retrieving users'})
+    
+#get user by id
+@app.route('/get_user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+    user_data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email
+    }
+    return jsonify(user_data)
+    
+# generate a test user
+@app.route('/test_user', methods=['GET'])
+def generate_user():
+    organizations = ['@pomona.edu', '@cmc.edu', '@scripps.edu', '@hmc.edu', '@pitzer.edu']
 
+    username = lorem.words(1)
+    email = lorem.words(1) + choice(organizations)
+
+    new_user = User(username=username, email=email)
+
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'Test user created successfully'})
+
+
+#--------------event routes--------------
 
 # route for retrieving all events
 @app.route('/all_events', methods=['GET'])
