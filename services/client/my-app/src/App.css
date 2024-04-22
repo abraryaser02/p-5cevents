@@ -402,3 +402,24 @@ body {
   border-radius: 50%;
   object-fit: cover; /* Set object-fit property here */
 }
+
+.event {
+  border: 1px solid #b4bd8a;
+  background-color: #D0D6B3;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.events-list {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+}
+
+.event h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.event p {
+  margin-bottom: 5px;
+}

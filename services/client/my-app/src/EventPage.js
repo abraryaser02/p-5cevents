@@ -1,3 +1,8 @@
+
+
+//curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
+
+
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
 
@@ -181,9 +186,9 @@ function EventPage() {
       <h2>Upcoming Events</h2>
         <ul>
           {events.map(event => (
-            <li key={event.id}>
+            <li key={event.id} className="event">
               <h3>{event.name}</h3>
-              <p>{event.description}</p>
+              <p>Description: {event.description}</p>
               <p>Location: {event.location}</p>
               <p>Time: {new Date(event.time).toLocaleString()}</p>
               <p>Organization: {event.organization}</p>
