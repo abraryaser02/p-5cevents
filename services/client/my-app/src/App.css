@@ -367,6 +367,18 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.login-container button[type="register"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #253e0d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .login-form button[type="submit"]:hover {

@@ -38,6 +38,8 @@ function Login() {
         </label>
         <button type="submit">Login</button>
       </form>
+      <button type="register">Register</button>
+
     </div>
   );
 }
