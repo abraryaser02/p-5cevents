@@ -24,6 +24,10 @@ function Login() {
     }
   };
 
+  const handleRegister = (e) => {
+    
+  }
+
   return (
     <div className="login-container"> {/* Add the login-container class here */}
       <h2>Login</h2>
@@ -38,7 +42,7 @@ function Login() {
         </label>
         <button type="submit">Login</button>
       </form>
-      <button type="register">Register</button>
+      <button type="register" onClick={handleRegister}>Register</button>
 
     </div>
   );
