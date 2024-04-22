@@ -51,7 +51,7 @@ for sentence in sentences:
     
 corpus = []
 for col in clean_txt:
-    word_list = col.split(" ")
+    word_list = col.split(" ") 
     corpus.append(word_list)
 
 word2vec_model = Word2Vec(corpus, min_count=1, vector_size = 70)

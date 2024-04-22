@@ -369,7 +369,7 @@ def execute_curl_command():
     curl_command = 'curl -X POST http://localhost:5001/create_scraped_event -H "Content-Type: application/json" -d \'{"name": "Event Name", "description": "Event Description", "location": "Event location", "time": "2024-03-22T15:30:00", "organization": "Event Organization"}\''
 
     # Execute the cURL command using subprocess
-    subprocess.run(curl_command, shell=True)
+    subprocess.run(curl_command, shell=True) 
 
 
 # Schedule the function to run every 30 secs

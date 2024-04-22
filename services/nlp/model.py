@@ -58,4 +58,4 @@ word2vec_model = Word2Vec(corpus, min_count=1, vector_size = 70)
 # Load pre-trained Word2Vec model
     #word2vec_model = Word2Vec.load('path/to/pretrained/model')
 
-word2vec_model.save("p-5cevents/word2vec_model.bin")
+word2vec_model.save("p-5cevents/word2vec_model.bin") 
