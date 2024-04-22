@@ -32,28 +32,39 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
     # Define the relationship with events
     participants = db.relationship('Event', secondary='user_to_event', backref='users')
-    def __init__(self, username, email):
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
+        self.password = password
+
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text, nullable=False)
     location = db.Column(db.Text, nullable=False)
-    time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
     organization = db.Column(db.String(100), nullable=False)
+    contact_information = db.Column(db.Text, nullable=False)
+    registration_link = db.Column(db.String(128), nullable=False)
+
     # Define the relationship with users
     participants = db.relationship('User', secondary='user_to_event', backref='events')
-    def __init__(self, name, description, location, time, organization):
+    def __init__(self, name, description, location, start_time, end_time, organization, contact_information, registration_link):
         self.name = name
         self.description = description
         self.location = location
-        self.time = time
+        self.start_time = start_time
+        self.end_time = end_time
         self.organization = organization
+        self.contact_information = contact_information
+        self.registration_link = registration_link
+
 class User_To_Event(db.Model):
     __tablename__ = "user_to_event"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -82,6 +93,7 @@ def get_users():
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
+                'password': user.password,
                 'active': user.active
             }
             users_list.append(user_data)
@@ -99,6 +111,7 @@ def get_user(user_id):
     user_data = {
         'id': user.id,
         'username': user.username,
+        'password': user.password,
         'email': user.email
     }
     return jsonify(user_data)
@@ -110,8 +123,9 @@ def generate_user():
 
     username = lorem.words(1)
     email = lorem.words(1) + choice(organizations)
+    password = lorem.words(1)
 
-    new_user = User(username=username, email=email)
+    new_user = User(username=username, email=email, password = password)
 
     db.session.add(new_user)
     db.session.commit()
@@ -131,8 +145,11 @@ def get_events():
             'name': event.name,
             'description': event.description,
             'location': event.location,
-            'time': event.time,
-            'organization': event.organization
+            'start_time': event.start_time,
+            'end_time': event.end_time,
+            'organization': event.organization,
+            'contact_information': event.contact_information,
+            'registration_link': event.registration_link
         }
         events_list.append(event_data)
     return jsonify(events_list)
@@ -148,8 +165,11 @@ def get_event(event_id):
             'name': event.name,
             'description': event.description,
             'location': event.location,
-            'time': event.time,
-            'organization': event.organization
+            'start_time': event.start_time,
+            'end_time': event.end_time,
+            'organization': event.organization,
+            'contact_information': event.contact_organization,
+            'registration_link': event.registration_link
         }
     return jsonify(event_data)
 
@@ -177,13 +197,21 @@ def get_event_location(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'location': event.location})
 
-# get event time
-@app.route('/get_event/<int:event_id>/time', methods=['GET'])
-def get_event_time(event_id):
+# get event start time
+@app.route('/get_event/<int:event_id>/start_time', methods=['GET'])
+def get_event_start_time(event_id):
     event = Event.query.get(event_id)
     if event is None:
         return jsonify({'error': 'Event not found'}), 404
-    return jsonify({'time': event.time})
+    return jsonify({'start_time': event.start_time})
+
+# get event end time
+@app.route('/get_event/<int:event_id>/end_time', methods=['GET'])
+def get_event_end_time(event_id):
+    event = Event.query.get(event_id)
+    if event is None:
+        return jsonify({'error': 'Event not found'}), 404
+    return jsonify({'end_time': event.end_time})
 
 # get event organization
 @app.route('/get_event/<int:event_id>/organization', methods=['GET'])
@@ -193,6 +221,22 @@ def get_event_organization(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'organization': event.organization})
 
+# get event contact info
+@app.route('/get_event/<int:event_id>/contact_information', methods=['GET'])
+def get_event_contact_information(event_id):
+    event = Event.query.get(event_id)
+    if event is None:
+        return jsonify({'error': 'Event not found'}), 404
+    return jsonify({'contact_information': event.contact_information})
+
+# get event reg link
+@app.route('/get_event/<int:event_id>/registration_link', methods=['GET'])
+def get_event_registration_link(event_id):
+    event = Event.query.get(event_id)
+    if event is None:
+        return jsonify({'error': 'Event not found'}), 404
+    return jsonify({'registration_link': event.registration_link})
+
 # route for creating a new event
 @app.route('/create_event', methods=['POST'])
 def create_event():
@@ -201,10 +245,14 @@ def create_event():
     name = data['name']
     description = data['description']
     location = data['location']
-    time = data['time']
+    start_time = data['start_time']
+    end_time = data['end_time']
     organization = data['organization']
+    contact_information = data['contact_information']
+    registration_link = data['registration_link']
 
-    new_event = Event(name=name, description=description, location=location, time=time, organization=organization)
+
+    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time=end_time, organization=organization, contact_information=contact_information,registration_link=registration_link)
 
     try:
         db.session.add(new_event)
@@ -221,8 +269,11 @@ curl -X POST http://localhost:5001/create_event \
   "name": "Event Name",
   "description": "Event Description",
   "location": "Event location",
-  "time": "2024-03-22T15:30:00",
+  "start_time": "2024-03-22T15:30:00",
+  "end_time": "2024-03-22T15:30:00"
   "organization": "Event Organization"
+  "contact_information": "contact info"
+  "registration_link": "registration link"
 }'
 '''
 
@@ -246,16 +297,21 @@ def delete_event(event_id):
 
 # generate a test event
 @app.route('/test_event', methods=['GET'])
-def geneate_events():
+def generate_events():
     organizations = ['Pomona College', 'CMC', 'Scripps', 'HMC', 'Pitzer College']
 
     name = lorem.words(3)
     description = lorem.words(10)
     location = lorem.words(2)
-    time = datetime.now() + timedelta(days=choice(range(1, 30)))
+    start_time = datetime.now() + timedelta(days=choice(range(1, 30)))
+    end_time = datetime.now() + timedelta(days=choice(range(1, 30)))
+
     organization = choice(organizations)
 
-    new_event = Event(name=name, description=description, location=location, time=time, organization=organization)
+    contact_information = lorem.words(3)
+    registration_link = lorem.words(1)
+
+    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time = end_time, organization=organization, contact_information=contact_information, registration_link=registration_link)
 
     db.session.add(new_event)
     db.session.commit()
