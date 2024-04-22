@@ -55,7 +55,8 @@ class Event(db.Model):
         self.organization = organization
 
 
-# routes
+#----------user routes-----------
+
 @app.route('/users/ping', methods=['GET'])
 def ping_pong():
     return jsonify({
@@ -63,7 +64,7 @@ def ping_pong():
         'message': 'pong!'
     })
 
-@app.route('/users', methods=['GET'])
+@app.route('/all_users', methods=['GET'])
 def get_users():
     try:
         # Query all users from the database
@@ -82,7 +83,36 @@ def get_users():
         return jsonify(users_list)
     except e:
         return jsonify({'message': 'error retrieving users'})
+    
+#get user by id
+@app.route('/get_user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+    user_data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email
+    }
+    return jsonify(user_data)
+    
+# generate a test user
+@app.route('/test_user', methods=['GET'])
+def generate_user():
+    organizations = ['@pomona.edu', '@cmc.edu', '@scripps.edu', '@hmc.edu', '@pitzer.edu']
 
+    username = lorem.words(1)
+    email = lorem.words(1) + choice(organizations)
+
+    new_user = User(username=username, email=email)
+
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'Test user created successfully'})
+
+
+#--------------event routes--------------
 
 # route for retrieving all events
 @app.route('/all_events', methods=['GET'])
