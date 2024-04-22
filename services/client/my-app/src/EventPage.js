@@ -46,7 +46,7 @@ function EventPage() {
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
     try {
-      const response = await fetch('http://localhost:3000/create_event', { // wrong endpoint
+      const response = await fetch('http://localhost:5001/create_event', { // wrong endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
