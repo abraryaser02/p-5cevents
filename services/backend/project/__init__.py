@@ -58,14 +58,6 @@ class User_To_Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
-
-class User_To_Event(db.Model):
-    __tablename__ = "user_to_event"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
-
-
 #----------user routes-----------
 
 @app.route('/users/ping', methods=['GET'])
