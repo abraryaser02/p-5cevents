@@ -80,7 +80,8 @@ body {
 }
 
 .App-header {
-  margin: 200px auto;
+  margin-top: 100px;
+  margin-left: 300px;
   width: fit-content; /* Set width to fit content horizontally */
 }
 
@@ -403,16 +404,20 @@ body {
   object-fit: cover; /* Set object-fit property here */
 }
 
-.event {
-  border: 1px solid #b4bd8a;
-  background-color: #D0D6B3;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+/* Style Fetched Events */
 
 .events-list {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0;
+  margin-top: 100px;
+  margin-left: 300px;
+  width: 1000px;
+}
+
+.event {
+  border: 10px solid #D0D6B3;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  list-style-type: none;
 }
 
 .event h3 {

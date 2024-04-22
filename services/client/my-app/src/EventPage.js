@@ -176,26 +176,27 @@ function EventPage() {
         
         </div>
       )}
-      <div className="events-list">
-        
-      </div>
 
 
       {/* Page header */}
       <header className="App-header">
       <h2>Upcoming Events</h2>
-        <ul>
-          {events.map(event => (
-            <li key={event.id} className="event">
-              <h3>{event.name}</h3>
-              <p>Description: {event.description}</p>
-              <p>Location: {event.location}</p>
-              <p>Time: {new Date(event.time).toLocaleString()}</p>
-              <p>Organization: {event.organization}</p>
-            </li>
-          ))}
-        </ul>
       </header>
+
+      <div className="events-list">
+        <ul>
+            {events.map(event => (
+              <li key={event.id} className="event">
+                <h3>{event.name}</h3>
+                <p>Description: {event.description}</p>
+                <p>Location: {event.location}</p>
+                <p>Time: {new Date(event.time).toLocaleString()}</p>
+                <p>Organization: {event.organization}</p>
+              </li>
+            ))}
+          </ul>
+      </div>
+      
     </div>
   );
 }
