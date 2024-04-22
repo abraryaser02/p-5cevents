@@ -33,8 +33,8 @@ class User(db.Model):
     username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
-    # Define the relationship with events
-    events = db.relationship('Event', secondary='user_to_event', backref='users')
+    # # Define the relationship with events
+    # events = db.relationship('Event', secondary='user_to_event', backref='users')
 
     def __init__(self, username, email):
         self.username = username
@@ -48,8 +48,8 @@ class Event(db.Model):
     location = db.Column(db.Text, nullable=False)
     time = db.Column(db.DateTime, nullable=False)
     organization = db.Column(db.String(100), nullable=False)
-    # Define the relationship with users
-    users = db.relationship('User', secondary='user_to_event', backref='events')
+    # # Define the relationship with users
+    # users = db.relationship('User', secondary='user_to_event', backref='events')
 
     def __init__(self, name, description, location, time, organization):
         self.name = name
@@ -59,11 +59,11 @@ class Event(db.Model):
         self.organization = organization
 
 
-class User_To_Event(db.Model):
-    __tablename__ = "user_to_event"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+# class User_To_Event(db.Model):
+#     __tablename__ = "user_to_event"
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
 
 # routes
