@@ -347,11 +347,11 @@ def check_unread_emails():
                 # Convert the updated dictionary back to JSON
                 updated_json = json.dumps(data_dict)
 
-                print(updated_json)
+                #print(updated_json)
 
                 #return (updated_json)
 
-                execute_curl_command()
+                execute_curl_command(data_dict)
             
                 
 
@@ -364,12 +364,24 @@ def check_unread_emails():
     
     
 
-def execute_curl_command():
-    # Define the cURL command as a string
-    curl_command = 'curl -X POST http://localhost:5001/create_scraped_event -H "Content-Type: application/json" -d \'{"name": "Event Name", "description": "Event Description", "location": "Event location", "time": "2024-03-22T15:30:00", "organization": "Event Organization"}\''
+def execute_curl_command(data):
+
+    dictionary = {}
+    dictionary['event_name'] = data['event_name']
+    dictionary['description'] = data['description']
+    dictionary['location'] = data['location']
+
+    #need to fix time format!
+    dictionary['time'] = '2024-03-22T15:30:00'
+    dictionary['organization'] = data['event_name']
+
+    #json_data = '{"name": "John", "age": 30, "city": "New York"}'
+    updated_json = json.dumps(dictionary)
+    # Define the cURL command
+    curl_command = f'curl -X POST http://localhost:5001/create_scraped_event -H "Content-Type: application/json" -d \'{updated_json}\''
 
     # Execute the cURL command using subprocess
-    subprocess.run(curl_command, shell=True) 
+    subprocess.run(curl_command, shell=True)
 
 
 # Schedule the function to run every 30 secs
