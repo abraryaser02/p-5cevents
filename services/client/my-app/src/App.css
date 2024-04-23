@@ -26,6 +26,7 @@ body {
   height: 70px;
   display: flex; /* Use flexbox */
   align-items: center; /* Center vertically */
+  z-index: 1000;
 }
 
 .top-bar h1 {
@@ -80,7 +81,7 @@ body {
 }
 
 .App-header {
-  margin-top: 100px;
+  margin-top: 150px;
   margin-left: 300px;
   width: fit-content; /* Set width to fit content horizontally */
 }
@@ -409,7 +410,10 @@ body {
 .events-list {
   margin-top: 100px;
   margin-left: 300px;
-  width: 1000px;
+  width: 72%;
+  position: sticky;
+  left: 0; 
+  top: 70px;
 }
 
 .event {
