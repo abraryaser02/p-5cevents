@@ -18,6 +18,9 @@ import logo from './logo-1.png';
 // Import ProfileIcon component
 import ProfileIcon from './ProfileIcon';
 
+// Import profile image 
+import profileimg from './profileimg.png';
+
 // Define the EventPage component
 function EventPage() {
   // Define state variables using the useState hook
@@ -98,7 +101,7 @@ function EventPage() {
 
 
   // Return JSX for rendering
-  const imageUrl = './profileimg.png';
+  const imageUrl = profileimg;
   return (
     <div className="App">
       {/* Navigation bar */}
