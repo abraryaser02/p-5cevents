@@ -6,6 +6,8 @@ from random import choice
 from lorem_text import lorem
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import JSON
+
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
@@ -52,10 +54,11 @@ class Event(db.Model):
     organization = db.Column(db.String(100), nullable=False)
     contact_information = db.Column(db.Text, nullable=False)
     registration_link = db.Column(db.String(128), nullable=False)
+    keywords = db.Column(JSON, nullable=False)
 
     # Define the relationship with users
     participants = db.relationship('User', secondary='user_to_event', backref='events')
-    def __init__(self, name, description, location, start_time, end_time, organization, contact_information, registration_link):
+    def __init__(self, name, description, location, start_time, end_time, organization, contact_information, registration_link, keywords):
         self.name = name
         self.description = description
         self.location = location
@@ -64,12 +67,16 @@ class Event(db.Model):
         self.organization = organization
         self.contact_information = contact_information
         self.registration_link = registration_link
+        self.keywords = keywords
+
 
 class User_To_Event(db.Model):
     __tablename__ = "user_to_event"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+
+
 
 #----------user routes-----------
 
@@ -148,7 +155,8 @@ def get_events():
             'end_time': event.end_time,
             'organization': event.organization,
             'contact_information': event.contact_information,
-            'registration_link': event.registration_link
+            'registration_link': event.registration_link,
+            'keywords': event.keywords
         }
         events_list.append(event_data)
     return jsonify(events_list)
@@ -168,7 +176,8 @@ def get_event(event_id):
             'end_time': event.end_time,
             'organization': event.organization,
             'contact_information': event.contact_organization,
-            'registration_link': event.registration_link
+            'registration_link': event.registration_link,
+            'keywords': event.keywords
         }
     return jsonify(event_data)
 
@@ -236,6 +245,14 @@ def get_event_registration_link(event_id):
         return jsonify({'error': 'Event not found'}), 404
     return jsonify({'registration_link': event.registration_link})
 
+# get event key words
+@app.route('/get_event/<int:event_id>/keywords', methods=['GET'])
+def get_event_keywords(event_id):
+    event = Event.query.get(event_id)
+    if event is None:
+        return jsonify({'error': 'Event not found'}), 404
+    return jsonify({'keywords': event.keywords})
+
 # route for creating a new event
 @app.route('/create_event', methods=['POST'])
 def create_event():
@@ -249,9 +266,10 @@ def create_event():
     organization = data['organization']
     contact_information = data['contact_information']
     registration_link = data['registration_link']
+    keywords = data['keywords']
 
 
-    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time=end_time, organization=organization, contact_information=contact_information,registration_link=registration_link)
+    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time=end_time, organization=organization, contact_information=contact_information,registration_link=registration_link, keywords=keywords)
 
     try:
         db.session.add(new_event)
@@ -269,10 +287,11 @@ curl -X POST http://localhost:5001/create_event \
   "description": "Event Description",
   "location": "Event location",
   "start_time": "2024-03-22T15:30:00",
-  "end_time": "2024-03-22T15:30:00"
-  "organization": "Event Organization"
-  "contact_information": "contact info"
-  "registration_link": "registration link"
+  "end_time": "2024-03-22T15:30:00",
+  "organization": "Event Organization",
+  "contact_information": "contact info",
+  "registration_link": "registration link",
+  "keywords": ["keyword1", "keyword2", "keyword3"]
 }'
 '''
 
@@ -309,8 +328,9 @@ def generate_events():
 
     contact_information = lorem.words(3)
     registration_link = lorem.words(1)
+    keywords = ["keyword1", "keyword2", "keyword3"]
 
-    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time = end_time, organization=organization, contact_information=contact_information, registration_link=registration_link)
+    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time = end_time, organization=organization, contact_information=contact_information, registration_link=registration_link, keywords=keywords)
 
     db.session.add(new_event)
     db.session.commit()
