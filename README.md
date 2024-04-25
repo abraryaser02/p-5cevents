@@ -4,7 +4,7 @@
 
 #### Generate a test event (refresh page to create multiple random events)
 
-`http://localhost:5001/get_event/id`
+`http://localhost:5001/test_event`
 
 #### Get all events
 

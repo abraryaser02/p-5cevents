@@ -28,6 +28,8 @@ services:
     build:
       context: ./services/backend/project/db
       dockerfile: Dockerfile
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
     ports:
       - 5435:5432
     environment:
@@ -47,6 +49,10 @@ services:
     environment:
       - NODE_ENV=development
     command: npm start
+
+#-----------------------------
+volumes:
+  postgres_volume:
 
 
 
