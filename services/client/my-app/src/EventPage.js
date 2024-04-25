@@ -188,18 +188,20 @@ function EventPage() {
 
       <div className="events-list">
         <ul>
-            {events.map(event => (
-              <li key={event.id} className="event">
+          {events.map(event => (
+            <li key={event.id} className="event">
+              {/* Use Link component for event name */}
+              <Link to={`/eventdetail/${event.id}`}>
                 <h3>{event.name}</h3>
-                <p>Description: {event.description}</p>
-                <p>Location: {event.location}</p>
-                <p>Time: {new Date(event.time).toLocaleString()}</p>
-                <p>Organization: {event.organization}</p>
-              </li>
-            ))}
-          </ul>
+              </Link>
+              <p>Description: {event.description}</p>
+              <p>Location: {event.location}</p>
+              <p>Time: {new Date(event.time).toLocaleString()}</p>
+              <p>Organization: {event.organization}</p>
+            </li>
+          ))}
+        </ul>
       </div>
-      
     </div>
   );
 }

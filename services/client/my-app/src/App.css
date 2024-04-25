@@ -431,6 +431,14 @@ body {
   margin-bottom: 5px;
 }
 
+.events-list li a {
+  font-size: 20px;
+  margin-bottom: 5px;
+  text-decoration: none;
+  border-radius: 30px;
+  color: #434343;
+}
+
 .event p {
   margin-bottom: 5px;
 }
