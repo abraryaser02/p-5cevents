@@ -17,6 +17,7 @@ function App() {
           <Route path="/Calendar" element={<CalendarPage />} />
           <Route path="/Map" element={<MapPage />} />
           <Route path='/About' element={<AboutPage />} />
+          <Route path='/Login' element={<LoginPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* This route will be matched for any other route */}
         </Routes>
       </div>

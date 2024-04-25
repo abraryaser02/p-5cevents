@@ -89,7 +89,7 @@ body {
 
 .App-header h2 {
   font-size: 24px; /* Adjust as needed */
-  color: #333; /* Adjust as needed */
+  color: #92956F; /* Adjust as needed */
 }
 
 .App-header p {
@@ -433,4 +433,42 @@ body {
 
 .event p {
   margin-bottom: 5px;
+}
+
+
+/* CSS for the popup container */
+.popup-container {
+  position: absolute;
+  top: 50px; 
+  right: 10px; 
+  width: 150px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-container ul {
+  list-style-type: none;
+  padding: 0;
+  color: #92956F;
+  text-decoration: none;
+  border-radius: 30px;
+  padding: 6px 12px;
+}
+
+.popup-container li {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.popup-container li:hover {
+  background-color: #f0f0f0;
+}
+
+.popup-container li a {
+  color: #92956F;
+  text-decoration: none;
+  border-radius: 30px;
 }
