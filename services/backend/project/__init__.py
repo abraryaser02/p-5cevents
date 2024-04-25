@@ -165,7 +165,7 @@ def create_event():
     name = data['name']
     description = data['description']
     location = data['location']
-    time = data['time']
+    time = data['date']
     organization = data['organization']
 
     new_event = Event(name=name, description=description, location=location, time=time, organization=organization)

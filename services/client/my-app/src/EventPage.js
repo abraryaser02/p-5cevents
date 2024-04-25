@@ -95,6 +95,7 @@ function EventPage() {
       organization: organization,
     };
     // Call the function to post event data
+    console.log(eventData);
     postEventData(eventData);
     setShowCreateEventPopup(false); // Close the popup after submission
   };
