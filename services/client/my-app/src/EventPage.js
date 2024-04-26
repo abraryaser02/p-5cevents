@@ -92,22 +92,32 @@ function EventPage() {
 
   const handleSubmitEvent = (e) => {
     e.preventDefault();
+  
+    // Formatting the start and end times to combine date and time for correct datetime format
+    const formattedStartTime = `${date}T${startTime}`;
+    const formattedEndTime = `${date}T${endTime}`;
+  
     const eventData = {
       name: eventName,
-      start_time: startTime,
-      end_time: endTime,
+      date: date,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
       location: location,
       description: description,
       organization: organization,
       contact_information: contactInformation,
       registration_link: registrationLink,
-      keywords: keywords.split(',')  // Assuming keywords as comma-separated values
+      keywords: keywords.split(',').map(keyword => keyword.trim()) // Converts comma-separated string to an array of trimmed strings
     };
-    // Call the function to post event data
+  
+    // Log to console or remove in production
     console.log(eventData);
+    
+    // Call the function to post event data to the backend
     postEventData(eventData);
-    setShowCreateEventPopup(false); // Close the popup after submission
+    setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
+  
 
 
   // Return JSX for rendering
@@ -143,6 +153,9 @@ function EventPage() {
             // Updated form fields...
             <label>Event Name:
               <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
+            </label>
+            <label>Date:
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
             </label>
             <label>Start Time:
               <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
