@@ -150,7 +150,6 @@ function EventPage() {
         <div className="create-event-popup">
           <h2>Create Event</h2>
           <form onSubmit={handleSubmitEvent}>
-            // Updated form fields...
             <label>Event Name:
               <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
             </label>
