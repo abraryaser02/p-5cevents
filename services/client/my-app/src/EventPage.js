@@ -1,6 +1,6 @@
 
 
-//curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
+//curl.exe -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d '{"name":"Event Name","description":"Event Description","location":"Event location","start_time":"2024-03-22T15:30:00","end_time":"2024-03-22T15:30:00","organization":"Event Organization","contact_information":"contact info","registration_link":"registration link","keywords":["keyword1","keyword2","keyword3"]}'
 
 
 // Import React and useState hook from the 'react' package
@@ -27,8 +27,8 @@ function EventPage() {
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
   const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [start_time, setStartTime] = useState('');
+  const [end_time, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [organization, setOrganization] = useState('');
@@ -76,7 +76,7 @@ function EventPage() {
         setDate('');
         setLocation('');
         setDescription('');
-        setOrganizatoin('');
+        setOrganization('');
         setShowCreateEventPopup(false);
       }
     } catch (error) {
@@ -94,8 +94,8 @@ function EventPage() {
     e.preventDefault();
   
     // Formatting the start and end times to combine date and time for correct datetime format
-    const formattedStartTime = `${date}T${startTime}`;
-    const formattedEndTime = `${date}T${endTime}`;
+    const formattedStartTime = `${date}T${start_time}`;
+    const formattedEndTime = `${date}T${end_time}`;
   
     const eventData = {
       name: eventName,
@@ -157,10 +157,10 @@ function EventPage() {
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
             </label>
             <label>Start Time:
-              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+              <input type="time" value={start_time} onChange={(e) => setStartTime(e.target.value)} required />
             </label>
             <label>End Time:
-              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+              <input type="time" value={end_time} onChange={(e) => setEndTime(e.target.value)} required />
             </label>
             <label>Location:
               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
@@ -209,12 +209,17 @@ function EventPage() {
               </Link>
               <p>Description: {event.description}</p>
               <p>Location: {event.location}</p>
-              <p>Time: {new Date(event.time).toLocaleString()}</p>
+              <p>Start Time: {new Date(event.start_time).toLocaleString()}</p>
+              <p>End Time: {new Date(event.end_time).toLocaleString()}</p>
               <p>Organization: {event.organization}</p>
+              <p>Contact Information: {event.contact_information}</p>
+              <p>Registration Link: <a href={event.registration_link}>{event.registration_link}</a></p>
+              <p>Keywords: {event.keywords.join(', ')}</p>
             </li>
           ))}
         </ul>
       </div>
+
     </div>
   );
 }
