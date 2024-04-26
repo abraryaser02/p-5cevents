@@ -27,11 +27,16 @@ function EventPage() {
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
   const [date, setDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
-  const [organization, setOrganizatoin] = useState('');
+  const [organization, setOrganization] = useState('');
+  const [contactInformation, setContactInformation] = useState('');
+  const [registrationLink, setRegistrationLink] = useState('');
+  const [keywords, setKeywords] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [events, setEvents] = useState([]); // State to hold fetched events
+  const [events, setEvents] = useState([]);
 
   //fetching data from the backend
   useEffect(() => {
@@ -89,10 +94,14 @@ function EventPage() {
     e.preventDefault();
     const eventData = {
       name: eventName,
-      date: date,
+      start_time: startTime,
+      end_time: endTime,
       location: location,
       description: description,
       organization: organization,
+      contact_information: contactInformation,
+      registration_link: registrationLink,
+      keywords: keywords.split(',')  // Assuming keywords as comma-separated values
     };
     // Call the function to post event data
     console.log(eventData);
@@ -131,43 +140,34 @@ function EventPage() {
         <div className="create-event-popup">
           <h2>Create Event</h2>
           <form onSubmit={handleSubmitEvent}>
-            {/* Event form inputs */}
-            <label>
-              Event Name:
-              <input
-                type="text"
-                value={eventName}
-                onChange={(e) => setEventName(e.target.value)}
-                required
-              />
+            // Updated form fields...
+            <label>Event Name:
+              <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
             </label>
-            <label>
-              Date:
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
+            <label>Start Time:
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
             </label>
-            <label>
-              Location:
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                required
-              />
+            <label>End Time:
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
             </label>
-            <label>
-              Description:
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
+            <label>Location:
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
             </label>
-            {/* Submit button */}
+            <label>Description:
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+            </label>
+            <label>Organization:
+              <input type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
+            </label>
+            <label>Contact Information:
+              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} required />
+            </label>
+            <label>Registration Link:
+              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} required />
+            </label>
+            <label>Keywords:
+              <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Comma-separated" />
+            </label>
             <button type="submit">Submit Event</button>
           </form>
           {/* Confirmation message and button */}
