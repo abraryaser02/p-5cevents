@@ -340,8 +340,8 @@ def check_unread_emails():
                 data_dict = json.loads(json_dict)
 
                 # Add a list as the value for a key
-                data_dict["topic tag"] = topic_tag
-                data_dict["subjcet tag"] = list(subject_tag)
+                data_dict["topic_tag"] = topic_tag
+                data_dict["subjcet_tag"] = list(subject_tag)
 
                 #print(data_dict)
                 # Convert the updated dictionary back to JSON
@@ -367,13 +367,20 @@ def check_unread_emails():
 def execute_curl_command(data):
 
     dictionary = {}
-    dictionary['event_name'] = data['event_name']
+    dictionary['name'] = data['event_name']
     dictionary['description'] = data['description']
     dictionary['location'] = data['location']
 
     #need to fix time format!
-    dictionary['time'] = '2024-03-22T15:30:00'
+    dictionary['start_time'] = data['start_time']
+    dictionary['end_time'] = data['end_time']
     dictionary['organization'] = data['event_name']
+    dictionary['contact_information'] = data['contact_information']
+    dictionary['registration_link'] = data['registration_link']
+    dictionary['keywords'] = data['topic_tag'] + data['subject_tag']
+    
+
+    
 
     #json_data = '{"name": "John", "age": 30, "city": "New York"}'
     updated_json = json.dumps(dictionary)
