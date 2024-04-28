@@ -7,6 +7,8 @@ from lorem_text import lorem
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+import hashlib #Added
+
 
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
@@ -32,16 +34,30 @@ db = SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(128), nullable=False)
+    #username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
     password = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
     # Define the relationship with events
     participants = db.relationship('Event', secondary='user_to_event', backref='users')
-    def __init__(self, username, email, password):
-        self.username = username
+    def __init__(self, email, password):
+        #self.username = username
         self.email = email
         self.password = password
+  
+    def set_password(self, password):
+        # Hash the provided password using hashlib and store it in the password_hash field
+        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
+
+    def check_password(self, password):
+        # Compare the provided password with the hashed password stored in the database
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+    
+    def get_events(self):
+        return self.events
+    
+    def get_userID(self):
+        return self.id
 
 class Event(db.Model):
     __tablename__ = "events"
@@ -80,12 +96,87 @@ class User_To_Event(db.Model):
 
 #----------user routes-----------
 
-@app.route('/users/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })
+@app.route('/login', methods=['POST'])
+def login():
+    # Assuming the client sends username and password in JSON format
+    login_data = request.json
+
+    # Check if the received data contains username and password
+    if 'email' in login_data and 'password' in login_data:
+        # Extract username and password from the request data
+        email = login_data['email']
+        password = login_data['password']
+        
+        # Query the database to find the user by username
+        user = User.query.filter_by(email=email).first()
+        
+        # Validate the credentials
+        if user and user.check_password(password):
+            events = user.get_events
+            user_id = user.get_userID
+            # Return success response
+            return jsonify({'success': True, 'message': 'Login successful', 'userID': user_id, 'events': events})
+        else:
+            # Return failure response for invalid credentials
+            return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
+    else:
+        # Return failure response if username or password is missing
+        return jsonify({'success': False, 'message': 'Username or password missing'}), 400
+
+# Route for creating a new user
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    data = request.get_json()
+
+    #username = data['username']
+    email = data['email']
+    password = data['password']
+
+    # Create a new user instance
+    new_user = User(email=email, password=password)
+
+    try:
+        # Add the new user to the database session and commit changes
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'message': 'User created successfully'}), 201
+    except Exception as e:
+        # Rollback changes if an error occurs
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create user', 'details': str(e)}), 500
+    
+@app.route('/add_event_to_user', methods=['POST'])
+def add_event_to_user():
+    # Assuming the client sends JSON data containing the user ID and event ID
+    data = request.json
+
+    # Extract user ID and event ID from the request data
+    user_id = data.get('user_id')
+    event_id = data.get('event_id')
+
+    # Check if both user ID and event ID are provided
+    if user_id is None or event_id is None:
+        return jsonify({'error': 'User ID or event ID missing'}), 400
+
+    # Query the user and event objects from the database
+    user = User.query.get(user_id)
+    event = Event.query.get(event_id)
+
+    # Check if both user and event exist
+    if user is None or event is None:
+        return jsonify({'error': 'User or event not found'}), 404
+
+    # Add the event to the user's list of events
+    user.events.append(event)
+
+    try:
+        # Commit the changes to the database
+        db.session.commit()
+        return jsonify({'message': 'Event added to user successfully'}), 201
+    except Exception as e:
+        # Rollback changes if an error occurs
+        db.session.rollback()
+        return jsonify({'error': 'Failed to add event to user', 'details': str(e)}), 500
 
 @app.route('/all_users', methods=['GET'])
 def get_users():
