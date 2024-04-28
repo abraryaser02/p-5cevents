@@ -36,14 +36,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     #username = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
     # Define the relationship with events
     participants = db.relationship('Event', secondary='user_to_event', backref='users')
     def __init__(self, email, password):
         #self.username = username
         self.email = email
-        self.password = password
+        self.set_password(password)
   
     def set_password(self, password):
         # Hash the provided password using hashlib and store it in the password_hash field
@@ -112,17 +112,20 @@ def login():
         
         # Validate the credentials
         if user and user.check_password(password):
-            events = user.get_events
-            user_id = user.get_userID
             # Return success response
-            return jsonify({'success': True, 'message': 'Login successful', 'userID': user_id, 'events': events})
+            return jsonify({'success': True, 'message': 'Login successful', 'userID': user.get_userID(), 'events': user.get_events()})
         else:
             # Return failure response for invalid credentials
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
     else:
         # Return failure response if username or password is missing
+ 
         return jsonify({'success': False, 'message': 'Username or password missing'}), 400
-
+'''
+curl -X POST http://localhost:5001/login \
+     -H "Content-Type: application/json" \
+     -d '{"email": "example@example.com", "password": "securepassword"}'
+''' 
 # Route for creating a new user
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -144,7 +147,12 @@ def create_user():
         # Rollback changes if an error occurs
         db.session.rollback()
         return jsonify({'error': 'Failed to create user', 'details': str(e)}), 500
-    
+   
+'''
+curl -X POST http://localhost:5001/create_user \
+     -H "Content-Type: application/json" \
+     -d '{"email": "example@example.com", "password": "securepassword"}'
+''' 
 @app.route('/add_event_to_user', methods=['POST'])
 def add_event_to_user():
     # Assuming the client sends JSON data containing the user ID and event ID
@@ -266,7 +274,7 @@ def get_event(event_id):
             'start_time': event.start_time,
             'end_time': event.end_time,
             'organization': event.organization,
-            'contact_information': event.contact_organization,
+            'contact_information': event.contact_information,
             'registration_link': event.registration_link,
             'keywords': event.keywords
         }
