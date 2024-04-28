@@ -5,6 +5,7 @@ import CalendarPage from './CalendarPage';
 import EventDetailPage from './EventDetail';
 import EventPage from './EventPage';
 import LoginPage from './Login';
+import Register from './Register';
 import MapPage from './MapPage';
 import NotFoundPage from './NotFoundPage';
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/Map" element={<MapPage />} />
           <Route path='/About' element={<AboutPage />} />
           <Route path='/Login' element={<LoginPage />} />
+          <Route path='/Register' element={<Register />} />
           <Route path='/EventDetail' element={<EventDetailPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* This route will be matched for any other route */}
         </Routes>

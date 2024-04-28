@@ -14,18 +14,39 @@ function Login() {
     e.preventDefault();
     // Figure out backend stuff! 
     // Use temporary email and password for now to do login for demo
-    if (email === 'example@example.com' && password === 'password') {
-      setIsLoggedIn(true);
-      alert('Login successful!');
-      // Go to events page when logged in for now, create separate homepage in the future(?)
-      navigate('/events');
-    } else {
-      alert('Invalid email or password');
-    }
+    // Prepare the login data
+    const loginData = {
+      email: email,
+      password: password
+    };
+
+    // Send a POST request to the backend login endpoint
+    fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        setIsLoggedIn(true);
+        alert('Login successful!');
+        navigate('/events'); // Navigate to events page upon successful login
+      } else {
+        alert(data.message || 'Invalid email or password'); // Use message from backend or a default message
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to login');
+    });
   };
 
   const handleRegister = (e) => {
-    
+    e.preventDefault();
+    navigate('/register'); // Use navigate to go to the register page
   }
 
   return (
