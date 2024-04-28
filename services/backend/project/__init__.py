@@ -8,6 +8,17 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
+#import final_model
+
+
+#from nlp.final_model import check_unread_emails
+
+
+# import sys
+# sys.path.append('/Users/sadhvinarayanan/Downloads/5C_Events/p-5cevents/services/nlp/final_model.py')
+# from final_model import *
+
+#import final_model.py
 
 # instantiate the app
 app = Flask(__name__)
@@ -53,6 +64,15 @@ class Event(db.Model):
         self.location = location
         self.time = time
         self.organization = organization
+
+    # event_name = event_dict["event_name"]
+    # description = event_dict["description"]
+    # date = event_dict["date"]
+    # location = event_dict["location"]
+    # start_time = event_dict["start_time"]
+    # end_time = event_dict["end_time"]
+    # contact_information = event_dict["contact_information"]
+    # registration_link = event_dict["registration_link"]
 
 
 # routes
@@ -179,16 +199,59 @@ def create_event():
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
 
 '''
-curl -X POST http://localhost:5001/create_event \
+curl -X POST http://localhost:5001/create_scraped_event \
 -H "Content-Type: application/json" \
 -d '{
   "name": "Event Name",
   "description": "Event Description",
   "location": "Event location",
   "time": "2024-03-22T15:30:00",
-  "organization": "Event Organization"
+  "organization": "Event Organization" 
 }'
 '''
+# route for creating a new event
+@app.route('/create_scraped_event', methods=['POST'])
+#@app.route('/create_scraped_event', methods=['POST'])
+def create_scraped_event():
+
+    #data = final_model.py.my_function()
+
+    #for event in data_list:
+    data = request.get_json()
+    print(data)
+    data1 = {
+            "event_name": "Event Name",
+            "description": "Event Description",
+            "location": "Event location",
+            "time": "2024-03-22T15:30:00",
+            "organization": "Event Organization" 
+        }
+
+    name = data['event_name']
+    description = data['description']
+    #date = data['date']
+    location = data['location']
+    time = data['time']
+    # #start_time = data['start_time']
+    # end_time = data['end_time']
+    # contact_informaton = data['contact_informaton']
+    # resistration_link = data['resistration_link']
+    # topic_tag = data['topic_tag']
+    # subject_tag = data['subject_tag']
+
+    #need to be fixed
+    organization = data['event_name']
+
+    new_event = Event(name=name, description=description, location=location, time=time, organization=organization)
+
+    try:
+        db.session.add(new_event)
+        db.session.commit()
+        return jsonify({'message': 'Event created successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
+
 
 # route for deleting an event
 @app.route('/delete_event/<int:event_id>', methods=['DELETE'])
@@ -224,6 +287,8 @@ def geneate_events():
     db.session.add(new_event)
     db.session.commit()
     return jsonify({'message': 'Test events created successfully'})
+
+
 
 
 if __name__ == '__main__':
