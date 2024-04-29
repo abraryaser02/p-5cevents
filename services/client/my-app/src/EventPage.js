@@ -161,7 +161,6 @@ function EventPage() {
         <ul>
           {/* Navigation links */}
           <li><Link to="/events">Events</Link></li>
-          <li><Link to="/calendar">Calendar</Link></li>
           <li><Link to="/map">Map</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><button type= "event-button" button onClick={toggleCreateEventPopup}>Create Event</button></li>

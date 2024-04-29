@@ -406,6 +406,10 @@ body {
   object-fit: cover; /* Set object-fit property here */
 }
 
+.profile-icon-container :hover {
+  cursor: pointer;
+}
+
 
 /* Style Fetched Events */
 
