@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './App.css'; // Import the app.css file
+import * as maptilersdk from '@maptiler/sdk';
+import "@maptiler/sdk/dist/maptiler-sdk.css";
+import './App.css'; 
+import './map.css';
 import logo from './logo-1.png';
 
+const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
+const googleMapsApiKey = "AIzaSyA3g32S0rG5NcfPKC4QzJyvadFA73JpYl0"; 
+
 function MapPage() {
+
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const claremont = { lng: 20, lat: 30 };
+  const [zoom] = useState(5);
+  maptilersdk.config.apiKey = maptilerApiKey;
+
+  useEffect(() => {
+    if (map.current) return; // stops map from intializing more than once
+
+    map.current = new maptilersdk.Map({
+      container: mapContainer.current,
+      style: maptilersdk.MapStyle.STREETS,
+      center: [claremont.lng, claremont.lat],
+      zoom: zoom
+    });
+
+  }, [claremont.lng, claremont.lat, zoom]);
+
   return (
     <div className="App">
       <div className="top-bar">
@@ -18,10 +43,9 @@ function MapPage() {
         <li><Link to="/about">About</Link></li>
         </ul>
       </div>
-      <header className="App-header">
-        <h2>Map Page</h2>
-        <p>This is the map page content.</p>
-      </header>
+      <div className="map-wrap">
+        <div ref={mapContainer} className="map" />
+      </div>
     </div>
   );
 }
