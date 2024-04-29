@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Login from './Login';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ function Register() {
     };
 
     // Send a POST request to the backend login endpoint
-    fetch('/create_user', {
+    fetch('http://localhost:5001/create_user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,6 +45,11 @@ function Register() {
       alert('Failed to create a account');
     });
   };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    navigate('/login'); // Use navigate to go to the register page
+  }
 
   return (
     <div className="login-container">
@@ -78,6 +84,7 @@ function Register() {
         </label>
         <button type="submit">Register</button>
       </form>
+      <button type="login" onClick={handleLogin}>Login</button>
     </div>
   );
 }

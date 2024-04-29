@@ -44,7 +44,7 @@ class User(db.Model):
         #self.username = username
         self.email = email
         self.set_password(password)
-  
+    
     def set_password(self, password):
         # Hash the provided password using hashlib and store it in the password_hash field
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
@@ -55,6 +55,9 @@ class User(db.Model):
     
     def get_events(self):
         return self.events
+    
+    def get_email(self):
+        return self.email
     
     def get_userID(self):
         return self.id
@@ -113,7 +116,7 @@ def login():
         # Validate the credentials
         if user and user.check_password(password):
             # Return success response
-            return jsonify({'success': True, 'message': 'Login successful', 'userID': user.get_userID(), 'events': user.get_events()})
+            return jsonify({'success': True, 'message': 'Login successful', 'userID': user.get_userID(), 'email': user.get_email()})
         else:
             # Return failure response for invalid credentials
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
@@ -135,6 +138,15 @@ def create_user():
     email = data['email']
     password = data['password']
 
+    # Check if both user ID and event ID are provided
+    if email is None or password is None:
+        return jsonify({'message': 'email or password missing'}), 400
+    
+    # Check if the email already exists in the database
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({'message': 'Email already exists'}), 409  # 409 Conflict
+    
     # Create a new user instance
     new_user = User(email=email, password=password)
 
@@ -146,7 +158,7 @@ def create_user():
     except Exception as e:
         # Rollback changes if an error occurs
         db.session.rollback()
-        return jsonify({'error': 'Failed to create user', 'details': str(e)}), 500
+        return jsonify({'message': 'Failed to create user', 'details': str(e)}), 500
    
 '''
 curl -X POST http://localhost:5001/create_user \
@@ -164,7 +176,7 @@ def add_event_to_user():
 
     # Check if both user ID and event ID are provided
     if user_id is None or event_id is None:
-        return jsonify({'error': 'User ID or event ID missing'}), 400
+        return jsonify({'message': 'User ID or event ID missing'}), 400
 
     # Query the user and event objects from the database
     user = User.query.get(user_id)
@@ -172,7 +184,7 @@ def add_event_to_user():
 
     # Check if both user and event exist
     if user is None or event is None:
-        return jsonify({'error': 'User or event not found'}), 404
+        return jsonify({'message': 'User or event not found'}), 404
 
     # Add the event to the user's list of events
     user.events.append(event)
@@ -184,7 +196,7 @@ def add_event_to_user():
     except Exception as e:
         # Rollback changes if an error occurs
         db.session.rollback()
-        return jsonify({'error': 'Failed to add event to user', 'details': str(e)}), 500
+        return jsonify({'message': 'Failed to add event to user', 'details': str(e)}), 500
 
 @app.route('/all_users', methods=['GET'])
 def get_users():

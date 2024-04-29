@@ -23,7 +23,7 @@ function Login() {
     };
 
     // Send a POST request to the backend login endpoint
-    fetch('/login', {
+    fetch('http://localhost:5001/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ function Login() {
       if (data.success) {
         setIsLoggedIn(true);
         alert('Login successful!');
-        setUser({ email: data.email, userId: data.userId });
+        setUser({ email: data.email, userId: data.userId});
         navigate('/events'); // Navigate to events page upon successful login
       } else {
         alert(data.message || 'Invalid email or password'); // Use message from backend or a default message
