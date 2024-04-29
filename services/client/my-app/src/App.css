@@ -496,3 +496,54 @@ body {
   outline: none; /* Removes the default focus outline */
   box-shadow: 0 0 8px rgba(57, 107, 50, 0.5); /* Adds a stronger shadow when focused */
 }
+
+.search-filter-container {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.search-input {
+  margin-right: 30px; /* Add some space between the input and the button */
+}
+
+.search-filter-container {
+  position: absolute;
+  width: 21%;
+  display: relative;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Distribute space between items */
+ 
+}
+
+.search-input {
+  margin-right: 30px; /* Add some space between the input and the button */
+}
+
+.filter-popup-container {
+  position: relative; /* Position relative for absolute positioning of the popup */
+  z-index: 999; /* Set a high z-index to ensure it's at the highest layer */
+}
+
+.filter-popup {
+  position: relative;
+  top: 60px; /* Adjust this value to position the popup below the filter button */
+  background-color: white; /* White background */
+  padding: 10px;
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius for rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}
+
+.filter-popup ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+}
+
+.filter-popup li {
+  margin-bottom: 5px; /* Add some space between list items */
+  cursor: pointer;
+}
+
+.filter-popup li:hover {
+  color: #9e9898; /* Change the color to blue (or any color you prefer) */
+}

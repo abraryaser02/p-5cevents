@@ -38,6 +38,7 @@ function EventPage() {
   const [submitted, setSubmitted] = useState(false);
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFilterPopup, setShowFilterPopup] = useState(false);
 
   //fetching data from the backend
   useEffect(() => {
@@ -89,6 +90,15 @@ function EventPage() {
   // Function to toggle the event creation popup
   const toggleCreateEventPopup = () => {
     setShowCreateEventPopup(!showCreateEventPopup);
+  };
+
+  // Define the keywords for the filter
+  const filter = ["keyword1", "keyword2", "keyword3"];
+
+  // Function to handle clicking on a filter keyword
+  const handleFilterKeywordClick = (keyword) => {
+    // Update the searchQuery state to the clicked keyword
+    setSearchQuery(keyword.toLowerCase());
   };
 
   const handleSubmitEvent = (e) => {
@@ -205,14 +215,33 @@ function EventPage() {
       {/* Page header */}
       <header className="App-header">
       <h2>Upcoming Events</h2>
-      {/* Search input */}
-      <input
+      <div className="search-filter-container">
+        {/* Search input */}
+        <input
           className="search-input"
           type="text"
           placeholder="Search by name or keyword"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        {/* Filter button */}
+        <button className="filter-button" onClick={() => setShowFilterPopup(!showFilterPopup)}>Filter</button>
+      </div>
+        {/* Filter popup container */}
+        {showFilterPopup && (
+          <div className="filter-popup-container">
+            <div className="filter-popup">
+              <ul>
+                {filter.map((keyword, index) =>
+                  <li key={index} onClick={() => handleFilterKeywordClick(keyword)}>
+                    {keyword}
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        )}
       </header>
 
       
