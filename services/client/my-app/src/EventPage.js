@@ -1,3 +1,8 @@
+
+
+//curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
+
+
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
 
@@ -13,17 +18,26 @@ import logo from './logo-1.png';
 // Import ProfileIcon component
 import ProfileIcon from './ProfileIcon';
 
+// Import profile image 
+import profileimg from './profileimg.png';
+
 // Define the EventPage component
 function EventPage() {
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
   const [date, setDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
-  const [organization, setOrganizatoin] = useState('');
+  const [organization, setOrganization] = useState('');
+  const [contactInformation, setContactInformation] = useState('');
+  const [registrationLink, setRegistrationLink] = useState('');
+  const [keywords, setKeywords] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [events, setEvents] = useState([]); // State to hold fetched events
+  const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   //fetching data from the backend
   useEffect(() => {
@@ -46,7 +60,7 @@ function EventPage() {
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
     try {
-      const response = await fetch('http://localhost:3000/create_event', { // wrong endpoint
+      const response = await fetch('http://localhost:5001/create_event', { // wrong endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +77,7 @@ function EventPage() {
         setDate('');
         setLocation('');
         setDescription('');
-        setOrganizatoin('');
+        setOrganization('');
         setShowCreateEventPopup(false);
       }
     } catch (error) {
@@ -79,21 +93,42 @@ function EventPage() {
 
   const handleSubmitEvent = (e) => {
     e.preventDefault();
+  
+    // Formatting the start and end times to combine date and time for correct datetime format
+    const formattedStartTime = `${date}T${startTime}`;
+    const formattedEndTime = `${date}T${endTime}`;
+  
     const eventData = {
       name: eventName,
       date: date,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
       location: location,
       description: description,
       organization: organization,
+      contact_information: contactInformation,
+      registration_link: registrationLink,
+      keywords: keywords.split(',').map(keyword => keyword.trim()) // Converts comma-separated string to an array of trimmed strings
     };
-    // Call the function to post event data
+  
+    // Log to console or remove in production
+    console.log(eventData);
+    
+    // Call the function to post event data to the backend
     postEventData(eventData);
-    setShowCreateEventPopup(false); // Close the popup after submission
+    setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
+
+   // Filter events based on the search query
+   const filteredEvents = events.filter(event => 
+    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+  
 
 
   // Return JSX for rendering
-  const imageUrl = './profileimg.png';
+  const imageUrl = profileimg;
   return (
     <div className="App">
       {/* Navigation bar */}
@@ -122,43 +157,37 @@ function EventPage() {
         <div className="create-event-popup">
           <h2>Create Event</h2>
           <form onSubmit={handleSubmitEvent}>
-            {/* Event form inputs */}
-            <label>
-              Event Name:
-              <input
-                type="text"
-                value={eventName}
-                onChange={(e) => setEventName(e.target.value)}
-                required
-              />
+            // Updated form fields...
+            <label>Event Name:
+              <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
             </label>
-            <label>
-              Date:
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
+            <label>Date:
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
             </label>
-            <label>
-              Location:
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                required
-              />
+            <label>Start Time:
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
             </label>
-            <label>
-              Description:
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
+            <label>End Time:
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
             </label>
-            {/* Submit button */}
+            <label>Location:
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+            </label>
+            <label>Description:
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+            </label>
+            <label>Organization:
+              <input type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
+            </label>
+            <label>Contact Information:
+              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} required />
+            </label>
+            <label>Registration Link:
+              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} required />
+            </label>
+            <label>Keywords:
+              <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Comma-separated" />
+            </label>
             <button type="submit">Submit Event</button>
           </form>
           {/* Confirmation message and button */}
@@ -171,26 +200,42 @@ function EventPage() {
         
         </div>
       )}
-      <div className="events-list">
-        
-      </div>
 
 
       {/* Page header */}
       <header className="App-header">
       <h2>Upcoming Events</h2>
+      {/* Search input */}
+      <input
+          className="search-input"
+          type="text"
+          placeholder="Search by name or keyword"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </header>
+
+      
+
+      <div className="events-list">
         <ul>
-          {events.map(event => (
-            <li key={event.id}>
-              <h3>{event.name}</h3>
-              <p>{event.description}</p>
+          {filteredEvents.map(event => (
+            <li key={event.id} className="event">
+              <Link to={`/eventdetail/${event.id}`}>
+                <h3>{event.name}</h3>
+              </Link>
+              <p>Description: {event.description}</p>
               <p>Location: {event.location}</p>
-              <p>Time: {new Date(event.time).toLocaleString()}</p>
+              <p>Start Time: {new Date(event.start_time).toLocaleString()}</p>
+              <p>End Time: {new Date(event.end_time).toLocaleString()}</p>
               <p>Organization: {event.organization}</p>
+              <p>Contact Information: {event.contact_information}</p>
+              <p>Registration Link: <a href={event.registration_link}>{event.registration_link}</a></p>
+              <p>Keywords: {event.keywords.join(', ')}</p>
             </li>
           ))}
         </ul>
-      </header>
+      </div>
     </div>
   );
 }

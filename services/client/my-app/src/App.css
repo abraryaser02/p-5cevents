@@ -26,6 +26,7 @@ body {
   height: 70px;
   display: flex; /* Use flexbox */
   align-items: center; /* Center vertically */
+  z-index: 1000;
 }
 
 .top-bar h1 {
@@ -80,14 +81,15 @@ body {
 }
 
 .App-header {
-  margin: 200px auto;
+  margin-top: 150px;
+  margin-left: 300px;
   width: fit-content; /* Set width to fit content horizontally */
 }
 
 
 .App-header h2 {
   font-size: 24px; /* Adjust as needed */
-  color: #333; /* Adjust as needed */
+  color: #92956F; /* Adjust as needed */
 }
 
 .App-header p {
@@ -367,6 +369,18 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.login-container button[type="register"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #253e0d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .login-form button[type="submit"]:hover {
@@ -388,5 +402,97 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  border: 1px solid black; /* Add a black border */
   object-fit: cover; /* Set object-fit property here */
+}
+
+
+/* Style Fetched Events */
+
+.events-list {
+  margin-top: 100px;
+  margin-left: 300px;
+  width: 72%;
+  position: sticky;
+  left: 0; 
+  top: 70px;
+}
+
+.event {
+  border: 10px solid #D0D6B3;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  list-style-type: none;
+}
+
+.event h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.events-list li a {
+  font-size: 20px;
+  margin-bottom: 5px;
+  text-decoration: none;
+  border-radius: 30px;
+  color: #434343;
+}
+
+.event p {
+  margin-bottom: 5px;
+}
+
+
+/* CSS for the popup container */
+.popup-container {
+  position: absolute;
+  top: 50px; 
+  right: 10px; 
+  width: 150px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-container ul {
+  list-style-type: none;
+  padding: 0;
+  color: #92956F;
+  text-decoration: none;
+  border-radius: 30px;
+  padding: 6px 12px;
+}
+
+.popup-container li {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.popup-container li:hover {
+  background-color: #f0f0f0;
+}
+
+.popup-container li a {
+  color: #92956F;
+  text-decoration: none;
+  border-radius: 30px;
+}
+
+.search-input {
+  font-size: 16px;  /* Larger font size for better readability */
+  padding: 10px 20px; /* Padding to make the input taller and more spacious */
+  width: 120%; /* Makes the input take the full width of its container */
+  margin: 10px auto; /* Adds some margin around the input */
+  border: 2px solid #ccc; /* Adds a border to the input */
+  border-radius: 8px; /* Rounds the corners of the input field */
+  box-shadow: 0 2px 5px rgba(101, 232, 119, 0.1); /* Adds a subtle shadow to the input */
+}
+
+.search-input:focus {
+  border-color: #306d2c; /* Changes the border color on focus */
+  outline: none; /* Removes the default focus outline */
+  box-shadow: 0 0 8px rgba(57, 107, 50, 0.5); /* Adds a stronger shadow when focused */
 }
