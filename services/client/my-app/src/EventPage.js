@@ -1,6 +1,6 @@
 
 
-//curl.exe -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d '{"name":"Event Name","description":"Event Description","location":"Event location","start_time":"2024-03-22T15:30:00","end_time":"2024-03-22T15:30:00","organization":"Event Organization","contact_information":"contact info","registration_link":"registration link","keywords":["keyword1","keyword2","keyword3"]}'
+//curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
 
 
 // Import React and useState hook from the 'react' package
@@ -27,8 +27,8 @@ function EventPage() {
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
   const [date, setDate] = useState('');
-  const [start_time, setStartTime] = useState('');
-  const [end_time, setEndTime] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [organization, setOrganization] = useState('');
@@ -37,6 +37,7 @@ function EventPage() {
   const [keywords, setKeywords] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   //fetching data from the backend
   useEffect(() => {
@@ -76,7 +77,7 @@ function EventPage() {
         setDate('');
         setLocation('');
         setDescription('');
-        setOrganization('');
+        setOrganizatoin('');
         setShowCreateEventPopup(false);
       }
     } catch (error) {
@@ -94,8 +95,8 @@ function EventPage() {
     e.preventDefault();
   
     // Formatting the start and end times to combine date and time for correct datetime format
-    const formattedStartTime = `${date}T${start_time}`;
-    const formattedEndTime = `${date}T${end_time}`;
+    const formattedStartTime = `${date}T${startTime}`;
+    const formattedEndTime = `${date}T${endTime}`;
   
     const eventData = {
       name: eventName,
@@ -117,6 +118,12 @@ function EventPage() {
     postEventData(eventData);
     setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
+
+   // Filter events based on the search query
+   const filteredEvents = events.filter(event => 
+    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
   
 
 
@@ -150,6 +157,7 @@ function EventPage() {
         <div className="create-event-popup">
           <h2>Create Event</h2>
           <form onSubmit={handleSubmitEvent}>
+            // Updated form fields...
             <label>Event Name:
               <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
             </label>
@@ -157,10 +165,10 @@ function EventPage() {
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
             </label>
             <label>Start Time:
-              <input type="time" value={start_time} onChange={(e) => setStartTime(e.target.value)} required />
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
             </label>
             <label>End Time:
-              <input type="time" value={end_time} onChange={(e) => setEndTime(e.target.value)} required />
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
             </label>
             <label>Location:
               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
@@ -197,13 +205,22 @@ function EventPage() {
       {/* Page header */}
       <header className="App-header">
       <h2>Upcoming Events</h2>
+      {/* Search input */}
+      <input
+          className="search-input"
+          type="text"
+          placeholder="Search by name or keyword"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </header>
+
+      
 
       <div className="events-list">
         <ul>
-          {events.map(event => (
+          {filteredEvents.map(event => (
             <li key={event.id} className="event">
-              {/* Use Link component for event name */}
               <Link to={`/eventdetail/${event.id}`}>
                 <h3>{event.name}</h3>
               </Link>
@@ -219,7 +236,6 @@ function EventPage() {
           ))}
         </ul>
       </div>
-
     </div>
   );
 }

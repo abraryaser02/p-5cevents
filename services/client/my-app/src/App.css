@@ -480,3 +480,19 @@ body {
   text-decoration: none;
   border-radius: 30px;
 }
+
+.search-input {
+  font-size: 16px;  /* Larger font size for better readability */
+  padding: 10px 20px; /* Padding to make the input taller and more spacious */
+  width: 120%; /* Makes the input take the full width of its container */
+  margin: 10px auto; /* Adds some margin around the input */
+  border: 2px solid #ccc; /* Adds a border to the input */
+  border-radius: 8px; /* Rounds the corners of the input field */
+  box-shadow: 0 2px 5px rgba(101, 232, 119, 0.1); /* Adds a subtle shadow to the input */
+}
+
+.search-input:focus {
+  border-color: #306d2c; /* Changes the border color on focus */
+  outline: none; /* Removes the default focus outline */
+  box-shadow: 0 0 8px rgba(57, 107, 50, 0.5); /* Adds a stronger shadow when focused */
+}
