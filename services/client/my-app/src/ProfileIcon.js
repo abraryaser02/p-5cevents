@@ -1,15 +1,22 @@
 // Modify ProfileIcon component
 import React, { useState } from 'react';
-import './App.css'; // Import CSS for styling the profile icon
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext'; // Adjust the import path as needed
 
-// Import Link component from 'react-router-dom' package for navigation
-import { Link } from 'react-router-dom';
+import './App.css'; // Import CSS for styling the profile icon
 
 const ProfileIcon = ({ imageUrl }) => {
   const [showPopup, setShowPopup] = useState(false);
+  const { logoutUser } = useUser();
+  const navigate = useNavigate();
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
+  };
+
+  const handleLogout = () => {
+    logoutUser();
+    navigate('/login'); // Redirect to login page after logout
   };
 
   return (
@@ -22,7 +29,7 @@ const ProfileIcon = ({ imageUrl }) => {
           <ul>
             <li>My Events</li>
             <li>Liked Events</li>
-            <li><Link to="/login">Log Out</Link></li>
+            <li onClick={handleLogout} >Log Out</li>
           </ul>
         </div>
       )}
