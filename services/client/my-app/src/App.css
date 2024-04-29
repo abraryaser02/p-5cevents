@@ -508,10 +508,10 @@ body {
 
 .search-filter-container {
   position: absolute;
-  width: 21%;
+  width: 25%;
   display: relative;
-  align-items: center; /* Align items vertically */
-  justify-content: space-between; /* Distribute space between items */
+  align-items: center; 
+  justify-content: space-between; 
  
 }
 
@@ -519,31 +519,42 @@ body {
   margin-right: 30px; /* Add some space between the input and the button */
 }
 
-.filter-popup-container {
-  position: relative; /* Position relative for absolute positioning of the popup */
-  z-index: 999; /* Set a high z-index to ensure it's at the highest layer */
-}
-
 .filter-popup {
   position: relative;
-  top: 60px; /* Adjust this value to position the popup below the filter button */
-  background-color: white; /* White background */
+  z-index: 999;
+  top: 60px; 
+  background-color: white; 
   padding: 10px;
-  border: 1px solid #ccc; /* Add border */
-  border-radius: 5px; /* Add border radius for rounded corners */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  width: 1080px;
 }
 
-.filter-popup ul {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0; /* Remove default padding */
+.filter-checkboxes {
+  display: flex;
+  flex-direction: column; 
 }
 
-.filter-popup li {
-  margin-bottom: 5px; /* Add some space between list items */
-  cursor: pointer;
+.filter-checkbox {
+  margin-bottom: 5px; 
 }
 
-.filter-popup li:hover {
-  color: #9e9898; /* Change the color to blue (or any color you prefer) */
+.filter-checkbox input {
+  margin-right: 5px;
 }
+
+.filter-button {
+  background-color: #92956F; 
+  color: white; 
+  padding: 10px 10px;
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+.filter-button:hover {
+  background-color: #253e0d; 
+}
+

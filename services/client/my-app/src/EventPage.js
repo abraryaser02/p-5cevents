@@ -39,6 +39,7 @@ function EventPage() {
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilterPopup, setShowFilterPopup] = useState(false);
+  const [checkedKeywords, setCheckedKeywords] = useState([]);
 
   //fetching data from the backend
   useEffect(() => {
@@ -95,10 +96,15 @@ function EventPage() {
   // Define the keywords for the filter
   const filter = ["keyword1", "keyword2", "keyword3"];
 
-  // Function to handle clicking on a filter keyword
-  const handleFilterKeywordClick = (keyword) => {
-    // Update the searchQuery state to the clicked keyword
-    setSearchQuery(keyword.toLowerCase());
+  // Function to handle toggling of checked keywords
+  const handleKeywordCheckboxChange = (keyword) => {
+    // If the keyword is already checked, remove it from the checkedKeywords array
+    // If it's not checked, add it to the checkedKeywords array
+    setCheckedKeywords(prevCheckedKeywords =>
+      prevCheckedKeywords.includes(keyword)
+        ? prevCheckedKeywords.filter(k => k !== keyword)
+        : [...prevCheckedKeywords, keyword]
+    );
   };
 
   const handleSubmitEvent = (e) => {
@@ -129,10 +135,10 @@ function EventPage() {
     setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
 
-   // Filter events based on the search query
-   const filteredEvents = events.filter(event => 
-    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+   // Filter events based on the checked keywords
+  const filteredEvents = events.filter(event =>
+    checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword))
   );
   
 
@@ -226,20 +232,24 @@ function EventPage() {
         />
 
         {/* Filter button */}
-        <button className="filter-button" onClick={() => setShowFilterPopup(!showFilterPopup)}>Filter</button>
+        <button className="filter-button" onClick={() => setShowFilterPopup(prevState => !prevState)}>Filter</button>
       </div>
         {/* Filter popup container */}
         {showFilterPopup && (
-          <div className="filter-popup-container">
-            <div className="filter-popup">
-              <ul>
-                {filter.map((keyword, index) =>
-                  <li key={index} onClick={() => handleFilterKeywordClick(keyword)}>
-                    {keyword}
-                  </li>
-                )}
-              </ul>
-            </div>
+          <div className="filter-popup">
+            <ul>
+              {/* Filter checkboxes */}
+              {filter.map((keyword, index) => (
+                <div key={index} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={checkedKeywords.includes(keyword)}
+                    onChange={() => handleKeywordCheckboxChange(keyword)}
+                  />
+                  <label>{keyword}</label>
+                </div>
+              ))}
+            </ul>
           </div>
         )}
       </header>
