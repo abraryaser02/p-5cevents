@@ -8,9 +8,11 @@ import LoginPage from './Login';
 import Register from './Register';
 import MapPage from './MapPage';
 import NotFoundPage from './NotFoundPage';
+import { UserProvider } from './UserContext';
 
 function App() {
   return (
+    <UserProvider>
     <Router>
       <div className="App">
         <Routes>
@@ -26,6 +28,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </UserProvider>
   );
 }
 

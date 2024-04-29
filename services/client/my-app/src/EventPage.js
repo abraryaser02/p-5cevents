@@ -77,7 +77,7 @@ function EventPage() {
         setDate('');
         setLocation('');
         setDescription('');
-        setOrganizatoin('');
+        setOrganization('');
         setShowCreateEventPopup(false);
       }
     } catch (error) {

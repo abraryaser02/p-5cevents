@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import './App.css'; // Import the app.css file
+import { useUser } from './UserContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { setUser } = useUser();
   
   // Initialize useNavigate hook
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ function Login() {
       if (data.success) {
         setIsLoggedIn(true);
         alert('Login successful!');
+        setUser({ email: data.email, userId: data.userId });
         navigate('/events'); // Navigate to events page upon successful login
       } else {
         alert(data.message || 'Invalid email or password'); // Use message from backend or a default message
