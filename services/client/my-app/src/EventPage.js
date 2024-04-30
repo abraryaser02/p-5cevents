@@ -136,14 +136,13 @@ function EventPage() {
   };
   
   
-  // Filter events based on the search query
+  // Filter events based on the search query and key events
   const filteredEvents = events.filter(event => 
-    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())),
-    checkedKeywords.length === 0 || // If no keywords are checked, show all events
-    checkedKeywords.some(keyword => event.keywords.includes(keyword))
+    (event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))) &&
+    (checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword)))
   );
-
 
   // Return JSX for rendering
   const imageUrl = profileimg;
