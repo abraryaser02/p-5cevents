@@ -406,6 +406,10 @@ body {
   object-fit: cover; /* Set object-fit property here */
 }
 
+.profile-icon-container :hover {
+  cursor: pointer;
+}
+
 
 /* Style Fetched Events */
 
@@ -497,6 +501,28 @@ body {
   box-shadow: 0 0 8px rgba(57, 107, 50, 0.5); /* Adds a stronger shadow when focused */
 }
 
+.search-filter-container {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.search-input {
+  margin-right: 30px; /* Add some space between the input and the button */
+}
+
+.search-filter-container {
+  position: absolute;
+  width: 25%;
+  display: relative;
+  align-items: center; 
+  justify-content: space-between; 
+ 
+}
+
+.search-input {
+  margin-right: 30px; /* Add some space between the input and the button */
+}
+
 .filter-popup {
   position: relative;
   z-index: 999;
@@ -535,3 +561,4 @@ body {
 .filter-button:hover {
   background-color: #253e0d; 
 }
+
