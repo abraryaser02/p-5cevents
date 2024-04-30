@@ -22,7 +22,7 @@ import ProfileIcon from './ProfileIcon';
 import profileimg from './profileimg.png';
 
 // Define the EventPage component
-function EventPage() {
+function EventPage({ currentUser }) {
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
@@ -40,24 +40,70 @@ function EventPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [checkedKeywords, setCheckedKeywords] = useState([]);
+  const [favoritedEvents, setFavoritedEvents] = useState(new Set());
 
   //fetching data from the backend
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/all_events'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setEvents(data); // Store fetched data in state
-      } catch (error) {
-        console.error('There was a problem fetching the event data:', error);
-      }
-    };
+    async function fetchData() {
+      const eventsResponse = await fetch('http://localhost:5001/all_events');
+      const eventsData = await eventsResponse.json();
+      setEvents(eventsData);
+    }
+    fetchData();
+  }, [currentUser]);
 
-    fetchEvents();
-  }, []); 
+  useEffect(() => {
+    async function fetchFavoritedEvents() {
+      if (currentUser && currentUser.id) {
+        try {
+          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.id}`);
+          if (response.ok) {
+            const favoritedEventsData = await response.json();
+            const favoriteIds = new Set(favoritedEventsData.map(event => event.id));
+            setFavoritedEvents(favoriteIds);
+          } else {
+            throw new Error('Failed to fetch favorited events');
+          }
+        } catch (error) {
+          console.error('Error fetching favorited events:', error);
+        }
+      }
+    }
+  
+    fetchFavoritedEvents();
+  }, [currentUser]); // Re-run this effect if currentUser changes
+
+  // Toggle favorite status of an event
+  const toggleFavorite = async (eventId) => {
+    if (!currentUser || !currentUser.id) {
+      alert("Please log in to favorite events.");
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:5001/toggle_user_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId })
+      });
+  
+      if (response.ok) {
+        const updatedFavoritedEvents = new Set(favoritedEvents);
+        if (updatedFavoritedEvents.has(eventId)) {
+          updatedFavoritedEvents.delete(eventId);
+        } else {
+          updatedFavoritedEvents.add(eventId);
+        }
+        setFavoritedEvents(updatedFavoritedEvents);
+      } else {
+        throw new Error('Failed to toggle favorite status');
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
@@ -260,6 +306,9 @@ function EventPage() {
               <Link to={`/eventdetail/${event.id}`}>
                 <h3>{event.name}</h3>
               </Link>
+              <button onClick={() => toggleFavorite(event.id)} className="favorite-button">
+              {favoritedEvents.has(event.id) ? '★' : '☆'}
+              </button>
               <p>Description: {event.description}</p>
               <p>Location: {event.location}</p>
               <p>Start Time: {new Date(event.start_time).toLocaleString()}</p>
