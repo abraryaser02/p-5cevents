@@ -93,6 +93,20 @@ function EventPage() {
     setShowCreateEventPopup(!showCreateEventPopup);
   };
 
+  // Define the keywords for the filter
+  const filter = ["keyword1", "keyword2", "keyword3"];
+
+  // Function to handle toggling of checked keywords
+  const handleKeywordCheckboxChange = (keyword) => {
+    // If the keyword is already checked, remove it from the checkedKeywords array
+    // If it's not checked, add it to the checkedKeywords array
+    setCheckedKeywords(prevCheckedKeywords =>
+      prevCheckedKeywords.includes(keyword)
+        ? prevCheckedKeywords.filter(k => k !== keyword)
+        : [...prevCheckedKeywords, keyword]
+    );
+  };
+
   const handleSubmitEvent = (e) => {
     e.preventDefault();
   
@@ -120,26 +134,16 @@ function EventPage() {
     postEventData(eventData);
     setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
-
-   // Filter events based on the search query
-   const filteredEvents = events.filter(event => 
-    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
   
-  // Define the keywords for the filter
-  const filter = ["keyword1", "keyword2", "keyword3"];
+  
+  // Filter events based on the search query
+  const filteredEvents = events.filter(event => 
+    event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())),
+    checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword))
+  );
 
-  // Function to handle toggling of checked keywords
-  const handleKeywordCheckboxChange = (keyword) => {
-    // If the keyword is already checked, remove it from the checkedKeywords array
-    // If it's not checked, add it to the checkedKeywords array
-    setCheckedKeywords(prevCheckedKeywords =>
-      prevCheckedKeywords.includes(keyword)
-        ? prevCheckedKeywords.filter(k => k !== keyword)
-        : [...prevCheckedKeywords, keyword]
-    );
-  };
 
   // Return JSX for rendering
   const imageUrl = profileimg;
@@ -159,7 +163,6 @@ function EventPage() {
         <ul>
           {/* Navigation links */}
           <li><Link to="/events">Events</Link></li>
-          <li><Link to="/calendar">Calendar</Link></li>
           <li><Link to="/map">Map</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><button type= "event-button" button onClick={toggleCreateEventPopup}>Create Event</button></li>
@@ -251,6 +254,7 @@ function EventPage() {
           </div>
         )}
       </header>
+
       
 
       <div className="events-list">

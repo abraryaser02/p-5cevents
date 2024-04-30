@@ -13,7 +13,6 @@ function AboutPage() {
       <img src={logo} alt="Logo" id="logo1" /> {/* Include the logo */}
         <ul>
         <li><Link to="/events">Events</Link></li>
-        <li><Link to="/calendar">Calendar</Link></li>
         <li><Link to="/map">Map</Link></li>
         <li><Link to="/about">About</Link></li>
         </ul>
