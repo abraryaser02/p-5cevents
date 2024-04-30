@@ -38,6 +38,8 @@ function EventPage() {
   const [submitted, setSubmitted] = useState(false);
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFilterPopup, setShowFilterPopup] = useState(false);
+  const [checkedKeywords, setCheckedKeywords] = useState([]);
 
   //fetching data from the backend
   useEffect(() => {
@@ -125,7 +127,19 @@ function EventPage() {
     event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
   );
   
+  // Define the keywords for the filter
+  const filter = ["keyword1", "keyword2", "keyword3"];
 
+  // Function to handle toggling of checked keywords
+  const handleKeywordCheckboxChange = (keyword) => {
+    // If the keyword is already checked, remove it from the checkedKeywords array
+    // If it's not checked, add it to the checkedKeywords array
+    setCheckedKeywords(prevCheckedKeywords =>
+      prevCheckedKeywords.includes(keyword)
+        ? prevCheckedKeywords.filter(k => k !== keyword)
+        : [...prevCheckedKeywords, keyword]
+    );
+  };
 
   // Return JSX for rendering
   const imageUrl = profileimg;
@@ -205,16 +219,38 @@ function EventPage() {
       {/* Page header */}
       <header className="App-header">
       <h2>Upcoming Events</h2>
-      {/* Search input */}
-      <input
+      <div className="search-filter-container">
+        {/* Search input */}
+        <input
           className="search-input"
           type="text"
           placeholder="Search by name or keyword"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-      </header>
 
+        {/* Filter button */}
+        <button className="filter-button" onClick={() => setShowFilterPopup(prevState => !prevState)}>Filter</button>
+      </div>
+        {/* Filter popup container */}
+        {showFilterPopup && (
+          <div className="filter-popup">
+            <ul>
+              {/* Filter checkboxes */}
+              {filter.map((keyword, index) => (
+                <div key={index} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={checkedKeywords.includes(keyword)}
+                    onChange={() => handleKeywordCheckboxChange(keyword)}
+                  />
+                  <label>{keyword}</label>
+                </div>
+              ))}
+            </ul>
+          </div>
+        )}
+      </header>
       
 
       <div className="events-list">
