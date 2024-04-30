@@ -33,7 +33,10 @@ function Login() {
     .then(data => {
       if (data.success) {
         alert('Login successful!');
-        loginUser({ email: data.email, userId: data.userId });  // Use loginUser to set user data and authenticate
+        // Assume data contains the user's email and an id. Adjust according to actual API response.
+        const userInfo = { email: data.email, userId: data.userId }; 
+        loginUser(userInfo);  // Use loginUser to set user data and authenticate
+        sessionStorage.setItem('user', JSON.stringify(userInfo)); // Corrected to use userInfo
         navigate('/events'); // Navigate to events page upon successful login
       } else {
         alert(data.message || 'Invalid email or password'); // Use message from backend or a default message
