@@ -88,6 +88,8 @@ class Event(db.Model):
         self.registration_link = registration_link
         self.keywords = keywords
 
+    def get_eventId(self):
+        return self.id
 
 class User_To_Event(db.Model):
     __tablename__ = "user_to_event"
@@ -385,7 +387,7 @@ def create_event():
     try:
         db.session.add(new_event)
         db.session.commit()
-        return jsonify({'message': 'Event created successfully'}), 201
+        return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
