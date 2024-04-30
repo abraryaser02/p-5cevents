@@ -496,3 +496,42 @@ body {
   outline: none; /* Removes the default focus outline */
   box-shadow: 0 0 8px rgba(57, 107, 50, 0.5); /* Adds a stronger shadow when focused */
 }
+
+.filter-popup {
+  position: relative;
+  z-index: 999;
+  top: 60px; 
+  background-color: white; 
+  padding: 10px;
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  width: 1080px;
+}
+
+.filter-checkboxes {
+  display: flex;
+  flex-direction: column; 
+}
+
+.filter-checkbox {
+  margin-bottom: 5px; 
+}
+
+.filter-checkbox input {
+  margin-right: 5px;
+}
+
+.filter-button {
+  background-color: #92956F; 
+  color: white; 
+  padding: 10px 10px;
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+.filter-button:hover {
+  background-color: #253e0d; 
+}
