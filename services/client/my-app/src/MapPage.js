@@ -2,15 +2,23 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-
-import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-
 import './App.css'; 
 import './map.css';
 import logo from './logo-1.png';
 
 import axios from "axios";
+import {
+  setKey,
+  setDefaults,
+  setLanguage,
+  setRegion,
+  fromAddress,
+  fromLatLng,
+  fromPlaceId,
+  setLocationType,
+  geocode,
+  RequestType,
+} from "react-geocode";
 
 const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
 
@@ -24,31 +32,56 @@ function MapPage() {
   const [zoom] = useState(15);
   maptilersdk.config.apiKey = maptilerApiKey;
 
+  // Set default response language and region (optional).
+  // This sets default values for language and region for geocoding requests.
+  setDefaults({
+    key: googleMapsApiKey, // Your API key here.
+    language: "en", // Default language for responses.
+    region: "es", // Default region for responses.
+  });
 
-  
   useEffect(() => {
     if (map.current) return; // stops map from intializing more than once
     
     axios
       .get("http://localhost:5001/all_events")
-      .then((response) => {
+      .then(async (response) => {
+
+        //console.log("Events received from server:", response.data);
         //handle successful response
-        const markerData = response.data.map((eventInfo) => ({
-          type: "Feature",
-          properties: {
-            id: eventInfo.id,
-            name: eventInfo.name,
-            description: eventInfo.description
-          },
-          geometry: {
-            type: "Point",
-            coordinates: eventInfo.location //need to use google maps geocoding api first
-          },
+        const markerData = await Promise.all(response.data.map(async (eventInfo) => {
+          try {
+            const { results } = await fromAddress(eventInfo.location + " " + "Claremont")
+            const { lat, lng } = results[0].geometry.location;
+            //eventInfo.coordinates = [lng, lat]; // Assigning coordinates to eventInfo
+            //console.log(eventInfo.location, [lng, lat])
+            return {
+              type: "Feature",
+              properties: {
+                id: eventInfo.id,
+                name: eventInfo.name,
+                description: eventInfo.description,
+                location: eventInfo.location,
+                organization: eventInfo.organization,
+                start_time: eventInfo.start_time,
+                end_time: eventInfo.end_time,
+                contact_information: eventInfo.contact_information,
+                registration_link: eventInfo.registration_link
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+              },
+            };
+          } catch (error) {
+            console.error("Error geocoding event:", error);
+            return null;
+          }
         }));
 
-        const mapInstance = new maplibregl.Map({
+        const mapInstance = new maptilersdk.Map({
           container: mapContainer.current,
-          style: 'https://api.maptiler.com/maps/bright/style.json?key=OjEUDMaMdUwGomWdF0NV',
+          style: maptilersdk.MapStyle.STREETS,
           center: [claremont.lng, claremont.lat],
           zoom: zoom,
         });
@@ -56,6 +89,31 @@ function MapPage() {
         mapInstance.on("load", () => {
           console.log("Map loaded successfully");
         })
+
+        mapInstance.on("load", () => {
+          markerData.forEach((marker) => {
+            const popupContent = `
+            <h3>${marker.properties.name}</h3>
+            <p><strong>Description:</strong> ${marker.properties.description}</p>
+            <p><strong>Location:</strong> ${marker.properties.location}</p>
+            <p><strong>Organization:</strong> ${marker.properties.organization}</p>
+            <p><strong>Start Time:</strong> ${marker.properties.start_time}</p>
+            <p><strong>End Time:</strong> ${marker.properties.end_time}</p>
+            <p><strong>Contact Information:</strong> ${marker.properties.contact_information}</p>
+            <p><a href="${marker.properties.registration_link}" target="_blank">Registration Link</a></p>
+          `;
+
+            const popup = new maptilersdk.Popup({ offset: 25 })
+            .setHTML(popupContent);
+
+            new maptilersdk.Marker({
+              color: "#FF0000",
+            })
+            .setLngLat(marker.geometry.coordinates)
+            .setPopup(popup)
+            .addTo(mapInstance);
+          });
+        });
 
         map.current = mapInstance;
       })
