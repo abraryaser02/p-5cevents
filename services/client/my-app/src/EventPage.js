@@ -180,14 +180,15 @@ function EventPage({ currentUser }) {
     postEventData(eventData);
     setShowCreateEventPopup(false); // Optionally close the popup after submission
   };
-
-   // Filter events based on the checked keywords
-  const filteredEvents = events.filter(event =>
-    checkedKeywords.length === 0 || // If no keywords are checked, show all events
-    checkedKeywords.some(keyword => event.keywords.includes(keyword))
-  );
   
-
+  
+  // Filter events based on the search query and key events
+  const filteredEvents = events.filter(event => 
+    (event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))) &&
+    (checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword)))
+  );
 
   // Return JSX for rendering
   const imageUrl = profileimg;
