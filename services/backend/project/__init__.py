@@ -450,3 +450,70 @@ def generate_events():
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+
+#--------------user to event routes--------------
+#Get all liked events by user_id
+@app.route('/events_by_user/<int:user_id>', methods = ['GET'])
+def events_by_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    events = user.get_events()
+    
+    events_list = [{
+        'id': event.id,
+        'name': event.name,
+        'description': event.description,
+        'location': event.location,
+        'start_time': event.start_time.isoformat(),
+        'end_time': event.end_time.isoformat(),
+        'organization': event.organization,
+        'cotact_information': event.contact_information,
+        'registration_link': event.registration_link,
+    } for event in events]
+
+    return jsonify(events_list)
+
+'''
+curl -X GET http://localhost:5001/events_by_user/1
+'''
+#Add a new row in the database
+@app.route('/toggle_user_event', methods=['POST'])
+def toggle_user_event():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    event_id = data.get('event_id')
+
+    if not user_id or not event_id:
+        return jsonify({'error': 'Missing user_id or event_id'}), 400
+
+    # Check if user exists
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Check if event exists
+    event = Event.query.get(event_id)
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404
+
+    # Check for existing association
+    existing_association = User_To_Event.query.filter_by(user_id=user_id, event_id=event_id).first()
+    if existing_association:
+        # If found, delete it
+        db.session.delete(existing_association)
+        db.session.commit()
+        return jsonify({'message': 'User removed from event successfully'}), 200
+
+    # If not found, create new association
+    new_association = User_To_Event(user_id=user_id, event_id=event_id)
+    db.session.add(new_association)
+    db.session.commit()
+    return jsonify({'message': 'User added to event successfully'}), 201
+
+'''
+curl -X POST http://localhost:5001/toggle_user_event \
+     -H "Content-Type: application/json" \
+     -d '{"user_id": 1, "event_id": 1}'
+''' 

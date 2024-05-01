@@ -9,25 +9,46 @@ import Register from './Register';
 import MapPage from './MapPage';
 import NotFoundPage from './NotFoundPage';
 import { UserProvider } from './UserContext';
+import ProtectedRoute from './ProtectedRoute'; // Make sure this is imported
 
 function App() {
   return (
     <UserProvider>
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route exact path="/" element={<LoginPage />} /> {/* Default route */}
-          <Route path="/Events" element={<EventPage />} />
-          <Route path="/Calendar" element={<CalendarPage />} />
-          <Route path="/Map" element={<MapPage />} />
-          <Route path='/About' element={<AboutPage />} />
-          <Route path='/Login' element={<LoginPage />} />
-          <Route path='/Register' element={<Register />} />
-          <Route path='/EventDetail' element={<EventDetailPage />} />
-          <Route path="*" element={<NotFoundPage />} /> {/* This route will be matched for any other route */}
-        </Routes>
-      </div>
-    </Router>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<LoginPage />} /> {/* Consider redirecting to a more appropriate default route */}
+            <Route path="/events" element={
+              <ProtectedRoute>
+                <EventPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/calendar" element={
+              <ProtectedRoute>
+                <CalendarPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/map" element={
+              <ProtectedRoute>
+                <MapPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/about" element={
+              <ProtectedRoute>
+                <AboutPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/eventdetail" element={
+              <ProtectedRoute>
+                <EventDetailPage />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
+      </Router>
     </UserProvider>
   );
 }

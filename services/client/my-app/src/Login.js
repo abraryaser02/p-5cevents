@@ -6,8 +6,7 @@ import { useUser } from './UserContext';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { setUser } = useUser();
+  const { loginUser } = useUser();  // Use loginUser function from context
   
   // Initialize useNavigate hook
   const navigate = useNavigate();
@@ -33,9 +32,11 @@ function Login() {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        setIsLoggedIn(true);
         alert('Login successful!');
-        setUser({ email: data.email, userId: data.userId});
+        // Assume data contains the user's email and an id. Adjust according to actual API response.
+        const userInfo = { email: data.email, userId: data.userId }; 
+        loginUser(userInfo);  // Use loginUser to set user data and authenticate
+        sessionStorage.setItem('user', JSON.stringify(userInfo)); // Corrected to use userInfo
         navigate('/events'); // Navigate to events page upon successful login
       } else {
         alert(data.message || 'Invalid email or password'); // Use message from backend or a default message
