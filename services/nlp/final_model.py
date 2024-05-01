@@ -13,14 +13,6 @@ import time
 
 
 
-#TRAINING THE MACHINE:
-import nltk
-
-import nltk
-
-
-
-
 def info_extraction(email):
   client = OpenAI(
       api_key=os.environ.get("OPENAI_API_KEY"),
@@ -44,6 +36,7 @@ def info_extraction(email):
 # {"role": "user", "content": "For each event, return a python dictionary which has elements for the event name, description, date, location, start time, end time (make sure to seperate start and end time as different elements), contact information (and the value for this key should be another list containing the contact person, email, and registration link). Do this for every event, dont cut it short. Also have it in python dict format. Don't put any text before the start of each dictionary, it should just be a list of dictionaries and nothing else. I want the first thing in the output to be the first dictionary. I want every event, nothign cut short."}
 
   final_str = completion.choices[0].message.content
+  print(final_str)
 
 #print(type(new_str))
 
@@ -55,9 +48,11 @@ def info_extraction(email):
 
 
 
+
   #print(type(str_dict))
   #print(list(event_dict.keys()))
   json_dict = json.dumps(event_dict, indent=4)
+  print(json_dict)
 
   return (json_dict)
 
@@ -177,7 +172,7 @@ def tagging(email):
         "complex analysis", "game theory"
     }
 
-    word2vec_model = Word2Vec.load('/Users/sadhvinarayanan/Downloads/5C_Events/p-5cevents/services/nlp/word2vec_model.bin')
+    word2vec_model = Word2Vec.load('./word2vec_model.bin')
 
 
     # Create vector embeddings for keywords
@@ -346,6 +341,7 @@ def check_unread_emails():
                 #print(data_dict)
                 # Convert the updated dictionary back to JSON
                 updated_json = json.dumps(data_dict)
+                print(updated_json)
 
                 #print(updated_json)
 
@@ -385,7 +381,7 @@ def execute_curl_command(data):
     #json_data = '{"name": "John", "age": 30, "city": "New York"}'
     updated_json = json.dumps(dictionary)
     # Define the cURL command
-    curl_command = f'curl -X POST http://localhost:5001/create_scraped_event -H "Content-Type: application/json" -d \'{updated_json}\''
+    curl_command = f'curl -X POST http://localhost:5001/create__event -H "Content-Type: application/json" -d \'{updated_json}\''
 
     # Execute the cURL command using subprocess
     subprocess.run(curl_command, shell=True)
