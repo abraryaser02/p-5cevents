@@ -74,8 +74,25 @@ function MapPage() {
               },
             };
           } catch (error) {
-            console.error("Error geocoding event:", error);
-            return null;
+            console.error("Couldn't geocode event:", eventInfo.name);
+            return {
+              type: "Feature",
+              properties: {
+                id: eventInfo.id,
+                name: eventInfo.name,
+                description: eventInfo.description,
+                location: eventInfo.location,
+                organization: eventInfo.organization,
+                start_time: eventInfo.start_time,
+                end_time: eventInfo.end_time,
+                contact_information: eventInfo.contact_information,
+                registration_link: eventInfo.registration_link
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [null, null] // Null coordinates
+              },
+            };
           }
         }));
 
