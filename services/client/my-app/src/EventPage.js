@@ -2,6 +2,8 @@
 
 //curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
 
+//Getting user data
+import { useUser } from './UserContext'; // Import the useUser hook
 
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
@@ -22,7 +24,8 @@ import ProfileIcon from './ProfileIcon';
 import profileimg from './profileimg.png';
 
 // Define the EventPage component
-function EventPage({ currentUser }) {
+function EventPage() {
+  const { user: currentUser } = useUser(); // Get currentUser from context
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
@@ -42,6 +45,8 @@ function EventPage({ currentUser }) {
   const [checkedKeywords, setCheckedKeywords] = useState([]);
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
 
+  console.log(currentUser)
+  console.log(currentUser.userId)
   //fetching data from the backend
   useEffect(() => {
     async function fetchData() {
@@ -75,7 +80,7 @@ function EventPage({ currentUser }) {
 
   // Toggle favorite status of an event
   const toggleFavorite = async (eventId) => {
-    if (!currentUser || !currentUser.id) {
+    if (!currentUser || !currentUser.userId) {
       alert("Please log in to favorite events.");
       return;
     }
@@ -86,24 +91,35 @@ function EventPage({ currentUser }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId })
+        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId})
       });
   
       if (response.ok) {
-        const updatedFavoritedEvents = new Set(favoritedEvents);
-        if (updatedFavoritedEvents.has(eventId)) {
-          updatedFavoritedEvents.delete(eventId);
-        } else {
-          updatedFavoritedEvents.add(eventId);
-        }
-        setFavoritedEvents(updatedFavoritedEvents);
+        // Fetch the new state of the favorited events directly from the response if possible
+        const result = await response.json(); // Assuming the backend sends updated favorited status
+        updateFavoritedEvents(result, eventId);
       } else {
-        throw new Error('Failed to toggle favorite status');
+        // If the response is not ok, handle potential errors more gracefully
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to toggle favorite status');
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
+      alert(error.message || 'An error occurred while trying to toggle favorite status');
     }
-  };
+  }
+
+
+  // Update the favorited events state based on the toggle result
+function updateFavoritedEvents(result, eventId) {
+  const updatedFavoritedEvents = new Set(favoritedEvents);
+  if (result.isFavorited) {
+    updatedFavoritedEvents.add(eventId);
+  } else {
+    updatedFavoritedEvents.delete(eventId);
+  }
+  setFavoritedEvents(updatedFavoritedEvents);
+}
 
   // Function to post event data to the backend
   const postEventData = async (eventData) => {

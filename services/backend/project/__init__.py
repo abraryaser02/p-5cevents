@@ -136,7 +136,7 @@ def login():
         # Validate the credentials
         if user and user.check_password(password):
             # Return success response
-            return jsonify({'success': True, 'message': 'Login successful', 'userID': user.get_userID(), 'email': user.get_email()})
+            return jsonify({'success': True, 'message': 'Login successful', 'userId': user.get_userID(), 'email': user.get_email()})
         else:
             # Return failure response for invalid credentials
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
