@@ -1,8 +1,8 @@
 import os
 from openai import OpenAI
 import json
-import gensim
-from gensim.models import Word2Vec
+#import gensim
+#from gensim.models import Word2Vec
 import re
 import subprocess
 
@@ -10,8 +10,10 @@ import imaplib
 import email
 from email.header import decode_header
 import time
+from TrainedEventsTagger import TrainedEventsTagger
+import pickle 
 
-import nltk
+#import nltk
 
 
 
@@ -264,6 +266,10 @@ def tagging(email):
     return(keyword_list, subject_list)
 
 
+tagger = TrainedEventsTagger('events_tagger_model_new.pkl')    
+
+
+
 # Gmail IMAP server settings
 gmail_user = "testing5c5cevents@gmail.com"
 gmail_password = "gicn cpzd kkvg ealf"
@@ -326,16 +332,16 @@ def check_unread_emails():
 
                 json_dict = info_extraction(event)
 
-                result = tagging(event)
-                topic_tag = result[0]
-                subject_tag = result[1]
+                result = tagger.tag(event)
+                #topic_tag = result[0]
+                #subject_tag = result[1]
 
                 # Parse the JSON string into a Python dictionary
                 data_dict = json.loads(json_dict)
 
                 # Add a list as the value for a key
-                data_dict["topic tag"] = topic_tag
-                data_dict["subjcet tag"] = list(subject_tag)
+                data_dict["tags"] = result
+                #data_dict["subjcet tag"] = list(subject_tag)
 
                 #print(data_dict)
                 # Convert the updated dictionary back to JSON
