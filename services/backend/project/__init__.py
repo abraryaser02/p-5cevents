@@ -228,9 +228,8 @@ def get_users():
         for user in users:
             user_data = {
                 'id': user.id,
-                'username': user.username,
                 'email': user.email,
-                'password': user.password,
+                'password': user.password_hash,
                 'active': user.active
             }
             users_list.append(user_data)
@@ -248,7 +247,7 @@ def get_user(user_id):
     user_data = {
         'id': user.id,
         'username': user.username,
-        'password': user.password,
+        'password': user.password_hash,
         'email': user.email
     }
     return jsonify(user_data)
