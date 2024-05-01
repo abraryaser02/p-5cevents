@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './App.css'; // Import the app.css file
+import ProfileIcon from './ProfileIcon';
 import logo from './logo-1.png';
+import './map.css';
+import profileimg from './profileimg.png';
+
+const imageUrl = profileimg;
 
 function AboutPage() {
   return (
     <div className="App">
       <div className="top-bar">
         <h1>About</h1>
+        {/* Profile icon */}
+      <ProfileIcon imageUrl={imageUrl} />
       </div>
       <div className="left-bar">
       <img src={logo} alt="Logo" id="logo1" /> {/* Include the logo */}

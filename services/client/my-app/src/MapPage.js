@@ -1,28 +1,24 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-import './App.css'; 
-import './map.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './App.css';
+import ProfileIcon from './ProfileIcon';
 import logo from './logo-1.png';
+import './map.css';
+import profileimg from './profileimg.png';
 
 import axios from "axios";
 import {
-  setKey,
-  setDefaults,
-  setLanguage,
-  setRegion,
   fromAddress,
-  fromLatLng,
-  fromPlaceId,
-  setLocationType,
-  geocode,
-  RequestType,
+  setDefaults
 } from "react-geocode";
 
 const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
 
 const googleMapsApiKey = "AIzaSyA3g32S0rG5NcfPKC4QzJyvadFA73JpYl0"; 
+
+const imageUrl = profileimg;
 
 function MapPage() {
 
@@ -145,6 +141,8 @@ function MapPage() {
     <div className="App">
       <div className="top-bar">
         <h1>Map</h1>
+        {/* Profile icon */}
+      <ProfileIcon imageUrl={imageUrl} />
       </div>
       <div className="left-bar">
       <img src={logo} alt="Logo" id="logo1" /> {/* Include the logo */}
