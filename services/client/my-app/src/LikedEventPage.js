@@ -6,7 +6,7 @@
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
 
-import {useUser} from './UserContext';
+import { useUser } from './UserContext';
 // Import Link component from 'react-router-dom' package for navigation
 import { Link } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ import profileimg from './profileimg.png';
 
 // Define the EventPage component
 function EventPage({}) {
-    const currentUser = useUser();
+  const { user: currentUser } = useUser();
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
@@ -44,8 +44,7 @@ function EventPage({}) {
   const [checkedKeywords, setCheckedKeywords] = useState([]);
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
   const [favoritedEventsData, setFavoritedEventDetails] = useState([]);
-
-  console.log('Current user:', currentUser);
+  console.log(currentUser.userId)
 
 //   fetching data from the backend
   useEffect(() => {
@@ -59,9 +58,9 @@ function EventPage({}) {
 
   useEffect(() => {
     async function fetchFavoritedEvents() {
-      if (currentUser && currentUser.id) {
+      if (currentUser && currentUser.userId) {
         try {
-          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.id}`);
+          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.userId}`);
           if (response.ok) {
             const favoritedEventsData = await response.json();
             console.log('Favorited events:', favoritedEventsData);
@@ -209,7 +208,7 @@ function EventPage({}) {
     <div className="App">
       {/* Navigation bar */}
       <div className="top-bar">
-        <h1>Favorited Events</h1>
+        <h1>Liked Events</h1>
         {/* Profile icon */}
         <ProfileIcon imageUrl={imageUrl} />
       </div>
@@ -223,96 +222,9 @@ function EventPage({}) {
           <li><Link to="/events">Events</Link></li>
           <li><Link to="/map">Map</Link></li>
           <li><Link to="/about">About</Link></li>
-          <li><button type= "event-button" button onClick={toggleCreateEventPopup}>Create Event</button></li>
         </ul>
       </div>
 
-      {/* Event creation popup */}
-      {showCreateEventPopup && (
-        <div className="create-event-popup">
-          <h2>Create Event</h2>
-          <form onSubmit={handleSubmitEvent}>
-            // Updated form fields...
-            <label>Event Name:
-              <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
-            </label>
-            <label>Date:
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-            </label>
-            <label>Start Time:
-              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-            </label>
-            <label>End Time:
-              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-            </label>
-            <label>Location:
-              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-            </label>
-            <label>Description:
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-            </label>
-            <label>Organization:
-              <input type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
-            </label>
-            <label>Contact Information:
-              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} required />
-            </label>
-            <label>Registration Link:
-              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} required />
-            </label>
-            <label>Keywords:
-              <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Comma-separated" />
-            </label>
-            <button type="submit">Submit Event</button>
-          </form>
-          {/* Confirmation message and button */}
-          {submitted && (
-            <div>
-              <p>Thank you for submitting your event.</p>
-              <button onClick={() => setSubmitted(false)}>Create Another Event</button>
-            </div>
-          )}
-        
-        </div>
-      )}
-
-
-      {/* Page header */}
-      <header className="App-header">
-      <h2>Upcoming Events</h2>
-      <div className="search-filter-container">
-        {/* Search input */}
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Search by name or keyword"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        {/* Filter button */}
-        <button className="filter-button" onClick={() => setShowFilterPopup(prevState => !prevState)}>Filter</button>
-      </div>
-        {/* Filter popup container */}
-        {showFilterPopup && (
-          <div className="filter-popup">
-            <ul>
-              {/* Filter checkboxes */}
-              {filter.map((keyword, index) => (
-                <div key={index} className="filter-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={checkedKeywords.includes(keyword)}
-                    onChange={() => handleKeywordCheckboxChange(keyword)}
-                  />
-                  <label>{keyword}</label>
-                </div>
-              ))}
-            </ul>
-          </div>
-        )}
-      </header>
-      
 
       <div className="events-list">
         <ul>
@@ -331,7 +243,6 @@ function EventPage({}) {
               <p>Organization: {event.organization}</p>
               <p>Contact Information: {event.contact_information}</p>
               <p>Registration Link: <a href={event.registration_link}>{event.registration_link}</a></p>
-              <p>Keywords: {event.keywords.join(', ')}</p>
             </li>
           ))}
         </ul>
