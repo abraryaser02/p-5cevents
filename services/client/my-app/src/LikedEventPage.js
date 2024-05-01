@@ -2,12 +2,11 @@
 
 //curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
 
-//Getting user data
-import { useUser } from './UserContext'; // Import the useUser hook
 
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
 
+import { useUser } from './UserContext';
 // Import Link component from 'react-router-dom' package for navigation
 import { Link } from 'react-router-dom';
 
@@ -24,8 +23,8 @@ import ProfileIcon from './ProfileIcon';
 import profileimg from './profileimg.png';
 
 // Define the EventPage component
-function EventPage() {
-  const { user: currentUser } = useUser(); // Get currentUser from context
+function EventPage({}) {
+  const { user: currentUser } = useUser();
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
@@ -44,10 +43,10 @@ function EventPage() {
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [checkedKeywords, setCheckedKeywords] = useState([]);
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
-
-  console.log(currentUser)
+  const [favoritedEventsData, setFavoritedEventDetails] = useState([]);
   console.log(currentUser.userId)
-  //fetching data from the backend
+
+//   fetching data from the backend
   useEffect(() => {
     async function fetchData() {
       const eventsResponse = await fetch('http://localhost:5001/all_events');
@@ -59,11 +58,13 @@ function EventPage() {
 
   useEffect(() => {
     async function fetchFavoritedEvents() {
-      if (currentUser && currentUser.id) {
+      if (currentUser && currentUser.userId) {
         try {
-          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.id}`);
+          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.userId}`);
           if (response.ok) {
             const favoritedEventsData = await response.json();
+            console.log('Favorited events:', favoritedEventsData);
+            setFavoritedEventDetails(favoritedEventsData);
             const favoriteIds = new Set(favoritedEventsData.map(event => event.id));
             setFavoritedEvents(favoriteIds);
           } else {
@@ -74,13 +75,12 @@ function EventPage() {
         }
       }
     }
-  
     fetchFavoritedEvents();
-  }, [currentUser]); // Re-run this effect if currentUser changes
-
+  }, [currentUser]);
+  
   // Toggle favorite status of an event
   const toggleFavorite = async (eventId) => {
-    if (!currentUser || !currentUser.userId) {
+    if (!currentUser || !currentUser.id) {
       alert("Please log in to favorite events.");
       return;
     }
@@ -91,35 +91,24 @@ function EventPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId})
+        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId })
       });
   
       if (response.ok) {
-        // Fetch the new state of the favorited events directly from the response if possible
-        const result = await response.json(); // Assuming the backend sends updated favorited status
-        updateFavoritedEvents(result, eventId);
+        const updatedFavoritedEvents = new Set(favoritedEvents);
+        if (updatedFavoritedEvents.has(eventId)) {
+          updatedFavoritedEvents.delete(eventId);
+        } else {
+          updatedFavoritedEvents.add(eventId);
+        }
+        setFavoritedEvents(updatedFavoritedEvents);
       } else {
-        // If the response is not ok, handle potential errors more gracefully
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to toggle favorite status');
+        throw new Error('Failed to toggle favorite status');
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
-      alert(error.message || 'An error occurred while trying to toggle favorite status');
     }
-  }
-
-
-  // Update the favorited events state based on the toggle result
-function updateFavoritedEvents(result, eventId) {
-  const updatedFavoritedEvents = new Set(favoritedEvents);
-  if (result.isFavorited) {
-    updatedFavoritedEvents.add(eventId);
-  } else {
-    updatedFavoritedEvents.delete(eventId);
-  }
-  setFavoritedEvents(updatedFavoritedEvents);
-}
+  };
 
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
@@ -206,13 +195,20 @@ function updateFavoritedEvents(result, eventId) {
     checkedKeywords.some(keyword => event.keywords.includes(keyword)))
   );
 
+  const favoritedEventsfilterd = favoritedEventsData.filter(event => 
+    (event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))) &&
+    (checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword)))
+  );
+
   // Return JSX for rendering
   const imageUrl = profileimg;
   return (
     <div className="App">
       {/* Navigation bar */}
       <div className="top-bar">
-        <h1>Events</h1>
+        <h1>Liked Events</h1>
         {/* Profile icon */}
         <ProfileIcon imageUrl={imageUrl} />
       </div>
@@ -226,101 +222,13 @@ function updateFavoritedEvents(result, eventId) {
           <li><Link to="/events">Events</Link></li>
           <li><Link to="/map">Map</Link></li>
           <li><Link to="/about">About</Link></li>
-          <li><button type= "event-button" button onClick={toggleCreateEventPopup}>Create Event</button></li>
         </ul>
       </div>
 
-      {/* Event creation popup */}
-      {showCreateEventPopup && (
-        <div className="create-event-popup">
-          <h2>Create Event</h2>
-          <form onSubmit={handleSubmitEvent}>
-            // Updated form fields...
-            <label>Event Name:
-              <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} required />
-            </label>
-            <label>Date:
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-            </label>
-            <label>Start Time:
-              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-            </label>
-            <label>End Time:
-              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-            </label>
-            <label>Location:
-              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-            </label>
-            <label>Description:
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-            </label>
-            <label>Organization:
-              <input type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
-            </label>
-            <label>Contact Information:
-              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} required />
-            </label>
-            <label>Registration Link:
-              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} required />
-            </label>
-            <label>Keywords:
-              <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Comma-separated" />
-            </label>
-            <button type="submit">Submit Event</button>
-          </form>
-          {/* Confirmation message and button */}
-          {submitted && (
-            <div>
-              <p>Thank you for submitting your event.</p>
-              <button onClick={() => setSubmitted(false)}>Create Another Event</button>
-            </div>
-          )}
-        
-        </div>
-      )}
-
-
-      {/* Page header */}
-      <header className="App-header">
-      <h2>Upcoming Events</h2>
-      <div className="search-filter-container">
-        {/* Search input */}
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Search by name or keyword"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        {/* Filter button */}
-        <button className="filter-button" onClick={() => setShowFilterPopup(prevState => !prevState)}>Filter</button>
-      </div>
-        {/* Filter popup container */}
-        {showFilterPopup && (
-          <div className="filter-popup">
-            <ul>
-              {/* Filter checkboxes */}
-              {filter.map((keyword, index) => (
-                <div key={index} className="filter-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={checkedKeywords.includes(keyword)}
-                    onChange={() => handleKeywordCheckboxChange(keyword)}
-                  />
-                  <label>{keyword}</label>
-                </div>
-              ))}
-            </ul>
-          </div>
-        )}
-      </header>
-
-      
 
       <div className="events-list">
         <ul>
-          {filteredEvents.map(event => (
+          {favoritedEventsfilterd.map(event => (
             <li key={event.id} className="event">
               <Link to={`/eventdetail/${event.id}`}>
                 <h3>{event.name}</h3>
@@ -335,7 +243,6 @@ function updateFavoritedEvents(result, eventId) {
               <p>Organization: {event.organization}</p>
               <p>Contact Information: {event.contact_information}</p>
               <p>Registration Link: <a href={event.registration_link}>{event.registration_link}</a></p>
-              <p>Keywords: {event.keywords.join(', ')}</p>
             </li>
           ))}
         </ul>
