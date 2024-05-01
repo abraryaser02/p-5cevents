@@ -34,7 +34,8 @@ function Login() {
       if (data.success) {
         alert('Login successful!');
         // Assume data contains the user's email and an id. Adjust according to actual API response.
-        const userInfo = { email: data.email, userId: data.userId }; 
+        const userInfo = { email: data.email, userId: data.userId}; 
+        console.log(data.userID)
         loginUser(userInfo);  // Use loginUser to set user data and authenticate
         sessionStorage.setItem('user', JSON.stringify(userInfo)); // Corrected to use userInfo
         navigate('/events'); // Navigate to events page upon successful login

@@ -2,12 +2,11 @@
 
 //curl -X POST http://localhost:5001/create_event -H "Content-Type: application/json" -d "{\"name\":\"Event Name\",\"description\":\"Event Description\",\"location\":\"Event location\",\"time\":\"2024-03-22T15:30:00\",\"organization\":\"Event Organization\"}"
 
-//Getting user data
-import { useUser } from './UserContext'; // Import the useUser hook
 
 // Import React and useState hook from the 'react' package
 import React, { useEffect, useState } from 'react';
 
+import {useUser} from './UserContext';
 // Import Link component from 'react-router-dom' package for navigation
 import { Link } from 'react-router-dom';
 
@@ -24,8 +23,8 @@ import ProfileIcon from './ProfileIcon';
 import profileimg from './profileimg.png';
 
 // Define the EventPage component
-function EventPage() {
-  const { user: currentUser } = useUser(); // Get currentUser from context
+function EventPage({}) {
+    const currentUser = useUser();
   // Define state variables using the useState hook
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [eventName, setEventName] = useState('');
@@ -44,10 +43,11 @@ function EventPage() {
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [checkedKeywords, setCheckedKeywords] = useState([]);
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
+  const [favoritedEventsData, setFavoritedEventDetails] = useState([]);
 
-  console.log(currentUser)
-  console.log(currentUser.userId)
-  //fetching data from the backend
+  console.log('Current user:', currentUser);
+
+//   fetching data from the backend
   useEffect(() => {
     async function fetchData() {
       const eventsResponse = await fetch('http://localhost:5001/all_events');
@@ -64,6 +64,8 @@ function EventPage() {
           const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.id}`);
           if (response.ok) {
             const favoritedEventsData = await response.json();
+            console.log('Favorited events:', favoritedEventsData);
+            setFavoritedEventDetails(favoritedEventsData);
             const favoriteIds = new Set(favoritedEventsData.map(event => event.id));
             setFavoritedEvents(favoriteIds);
           } else {
@@ -74,13 +76,12 @@ function EventPage() {
         }
       }
     }
-  
     fetchFavoritedEvents();
-  }, [currentUser]); // Re-run this effect if currentUser changes
-
+  }, [currentUser]);
+  
   // Toggle favorite status of an event
   const toggleFavorite = async (eventId) => {
-    if (!currentUser || !currentUser.userId) {
+    if (!currentUser || !currentUser.id) {
       alert("Please log in to favorite events.");
       return;
     }
@@ -91,35 +92,24 @@ function EventPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId})
+        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId })
       });
   
       if (response.ok) {
-        // Fetch the new state of the favorited events directly from the response if possible
-        const result = await response.json(); // Assuming the backend sends updated favorited status
-        updateFavoritedEvents(result, eventId);
+        const updatedFavoritedEvents = new Set(favoritedEvents);
+        if (updatedFavoritedEvents.has(eventId)) {
+          updatedFavoritedEvents.delete(eventId);
+        } else {
+          updatedFavoritedEvents.add(eventId);
+        }
+        setFavoritedEvents(updatedFavoritedEvents);
       } else {
-        // If the response is not ok, handle potential errors more gracefully
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to toggle favorite status');
+        throw new Error('Failed to toggle favorite status');
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
-      alert(error.message || 'An error occurred while trying to toggle favorite status');
     }
-  }
-
-
-  // Update the favorited events state based on the toggle result
-function updateFavoritedEvents(result, eventId) {
-  const updatedFavoritedEvents = new Set(favoritedEvents);
-  if (result.isFavorited) {
-    updatedFavoritedEvents.add(eventId);
-  } else {
-    updatedFavoritedEvents.delete(eventId);
-  }
-  setFavoritedEvents(updatedFavoritedEvents);
-}
+  };
 
   // Function to post event data to the backend
   const postEventData = async (eventData) => {
@@ -206,13 +196,20 @@ function updateFavoritedEvents(result, eventId) {
     checkedKeywords.some(keyword => event.keywords.includes(keyword)))
   );
 
+  const favoritedEventsfilterd = favoritedEventsData.filter(event => 
+    (event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    event.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))) &&
+    (checkedKeywords.length === 0 || // If no keywords are checked, show all events
+    checkedKeywords.some(keyword => event.keywords.includes(keyword)))
+  );
+
   // Return JSX for rendering
   const imageUrl = profileimg;
   return (
     <div className="App">
       {/* Navigation bar */}
       <div className="top-bar">
-        <h1>Events</h1>
+        <h1>Favorited Events</h1>
         {/* Profile icon */}
         <ProfileIcon imageUrl={imageUrl} />
       </div>
@@ -315,12 +312,11 @@ function updateFavoritedEvents(result, eventId) {
           </div>
         )}
       </header>
-
       
 
       <div className="events-list">
         <ul>
-          {filteredEvents.map(event => (
+          {favoritedEventsfilterd.map(event => (
             <li key={event.id} className="event">
               <Link to={`/eventdetail/${event.id}`}>
                 <h3>{event.name}</h3>

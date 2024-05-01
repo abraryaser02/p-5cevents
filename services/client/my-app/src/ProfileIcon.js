@@ -19,6 +19,10 @@ const ProfileIcon = ({ imageUrl }) => {
     navigate('/login'); // Redirect to login page after logout
   };
 
+  const likedEvent = () => {
+    navigate('/likedevents'); // Redirect to liked events page
+  };
+
   return (
     <div className="profile-icon-container">
       {/* Clickable profile icon */}
@@ -27,8 +31,7 @@ const ProfileIcon = ({ imageUrl }) => {
       {showPopup && (
         <div className="popup-container">
           <ul>
-            <li>My Events</li>
-            <li>Liked Events</li>
+            <li onClick={likedEvent}> Liked Events</li>
             <li onClick={handleLogout} >Log Out</li>
           </ul>
         </div>

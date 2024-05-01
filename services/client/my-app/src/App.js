@@ -4,6 +4,7 @@ import AboutPage from './AboutPage';
 import CalendarPage from './CalendarPage';
 import EventDetailPage from './EventDetail';
 import EventPage from './EventPage';
+import LikedEventPage from './LikedEventPage';
 import LoginPage from './Login';
 import Register from './Register';
 import MapPage from './MapPage';
@@ -36,6 +37,11 @@ function App() {
             <Route path="/about" element={
               <ProtectedRoute>
                 <AboutPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/likedevents" element={
+              <ProtectedRoute>
+                <LikedEventPage />
               </ProtectedRoute>
             } />
             <Route path="/login" element={<LoginPage />} />
