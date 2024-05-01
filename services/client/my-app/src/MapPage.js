@@ -2,14 +2,19 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
+
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+
 import './App.css'; 
 import './map.css';
 import logo from './logo-1.png';
 
-const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
-const googleMapsApiKey = "AIzaSyA3g32S0rG5NcfPKC4QzJyvadFA73JpYl0"; 
+import axios from "axios";
 
-const place = "Marston Quad Pomona College"
+const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
+
+const googleMapsApiKey = "AIzaSyA3g32S0rG5NcfPKC4QzJyvadFA73JpYl0"; 
 
 function MapPage() {
 
@@ -19,16 +24,46 @@ function MapPage() {
   const [zoom] = useState(15);
   maptilersdk.config.apiKey = maptilerApiKey;
 
+
+  
   useEffect(() => {
     if (map.current) return; // stops map from intializing more than once
+    
+    axios
+      .get("http://localhost:5001/all_events")
+      .then((response) => {
+        //handle successful response
+        const markerData = response.data.map((eventInfo) => ({
+          type: "Feature",
+          properties: {
+            id: eventInfo.id,
+            name: eventInfo.name,
+            description: eventInfo.description
+          },
+          geometry: {
+            type: "Point",
+            coordinates: eventInfo.location //need to use google maps geocoding api first
+          },
+        }));
 
-    map.current = new maptilersdk.Map({
-      container: mapContainer.current,
-      style: maptilersdk.MapStyle.STREETS,
-      center: [claremont.lng, claremont.lat],
-      zoom: zoom
-    });
+        const mapInstance = new maplibregl.Map({
+          container: mapContainer.current,
+          style: 'https://api.maptiler.com/maps/bright/style.json?key=OjEUDMaMdUwGomWdF0NV',
+          center: [claremont.lng, claremont.lat],
+          zoom: zoom,
+        });
 
+        mapInstance.on("load", () => {
+          console.log("Map loaded successfully");
+        })
+
+        map.current = mapInstance;
+      })
+      .catch((error) => {
+        // Handle fetch error
+        console.error("Error fetching events:", error);
+      });
+    
   }, [claremont.lng, claremont.lat, zoom]);
 
   return (
