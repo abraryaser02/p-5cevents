@@ -383,6 +383,18 @@ body {
   margin-bottom: 10px;
 }
 
+
+.login-container button[type="login"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #253e0d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
 .login-form button[type="submit"]:hover {
   background-color: #184009;
 }

@@ -156,7 +156,7 @@ function updateFavoritedEvents(result, eventId) {
   };
 
   // Define the keywords for the filter
-  const filter = ["keyword1", "keyword2", "keyword3"];
+  const filter = ["academics and graduate school", "networking and career development", "workshops and seminars", "volunteering and fundraising", "affinity groups and cultural events", "activism and social justice", "athletics", "wellness", "recreation and nightlife", "clubs and organizations", "science and technology", "arts and theater", "food and snacks", "pre-professional events", "sustainability"];
 
   // Function to handle toggling of checked keywords
   const handleKeywordCheckboxChange = (keyword) => {
