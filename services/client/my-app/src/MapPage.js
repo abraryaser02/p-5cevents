@@ -9,12 +9,14 @@ import logo from './logo-1.png';
 const maptilerApiKey = "OjEUDMaMdUwGomWdF0NV"; 
 const googleMapsApiKey = "AIzaSyA3g32S0rG5NcfPKC4QzJyvadFA73JpYl0"; 
 
+const place = "Marston Quad Pomona College"
+
 function MapPage() {
 
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const claremont = { lng: 20, lat: 30 };
-  const [zoom] = useState(5);
+  const claremont = { lng: -117.71350614401385, lat: 34.09932899451676 };
+  const [zoom] = useState(15);
   maptilersdk.config.apiKey = maptilerApiKey;
 
   useEffect(() => {
@@ -43,9 +45,12 @@ function MapPage() {
         <li><Link to="/about">About</Link></li>
         </ul>
       </div>
-      <div className="map-wrap">
-        <div ref={mapContainer} className="map" />
-      </div>
+      <header className="content">
+        <h2>Map Page</h2>
+        <div className="map-wrap">
+          <div ref={mapContainer} className="map" />
+        </div>
+      </header>
     </div>
   );
 }
