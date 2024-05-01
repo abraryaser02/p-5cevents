@@ -68,8 +68,8 @@ class Event(db.Model):
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text, nullable=False)
     location = db.Column(db.Text, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime, nullable=True)
+    end_time = db.Column(db.DateTime, nullable=True)
     organization = db.Column(db.String(100), nullable=False)
     contact_information = db.Column(db.Text, nullable=False)
     registration_link = db.Column(db.String(128), nullable=False)
@@ -404,7 +404,7 @@ def create_event():
     try:
         db.session.add(new_event)
         db.session.commit()
-        return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId}), 201
+        return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId()}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500

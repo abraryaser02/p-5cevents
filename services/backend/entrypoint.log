@@ -1,0 +1,16 @@
+Waiting for Postgres to start...
+Postgres started.
+Recreating Database...
+Database recreated.
+Starting final_model.py in the background...
+Starting Flask app...
+ * Serving Flask app 'project/__init__.py'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.31.0.4:5001
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 114-432-752

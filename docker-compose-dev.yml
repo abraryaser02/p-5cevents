@@ -1,12 +1,12 @@
 version: '3.8'
-#-----------------------------
+
 services:
   backend:
     container_name: backend
     build:
       context: ./services/backend
       dockerfile: Dockerfile-dev
-    command: python manage.py run -h 0.0.0.0
+    command: bash -c "python manage.py recreate_db && python manage.py run -h 0.0.0.0"
     volumes:
       - ./services/backend/:/usr/src/app/
     ports:
@@ -21,7 +21,7 @@ services:
       - backend-db
     links:
       - backend-db
-#-----------------------------
+
   backend-db:
     image: postgres:13
     container_name: backend-db
@@ -35,7 +35,20 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-#-----------------------------
+      
+  background-task:
+    container_name: background-task
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile-dev  
+    command: ["python3", "final_model.py"]
+    ports:
+      - 5005:5004
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - backend-db
+
   client:
     container_name: my-app
     build:
@@ -50,9 +63,5 @@ services:
       - NODE_ENV=development
     command: npm start
 
-#-----------------------------
 volumes:
   postgres_volume:
-
-
-

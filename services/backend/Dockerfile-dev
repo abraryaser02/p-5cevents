@@ -1,29 +1,34 @@
-FROM python:3.11.4
+# Use a slim version of Python for a smaller image size
+FROM python:3.11.4-slim
 
 # Install environment dependencies
 RUN apt-get update \
-    && apt-get -y install netcat-traditional \
+    && apt-get install -y netcat-openbsd --no-install-recommends \
     && apt-get clean
 
-# set environment variables
+# Set environment variables to prevent Python from writing pyc files to disc (equivalent to python -B option)
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set working directory
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# Add requirements
-RUN pip3 install --upgrade pip
+# Install Python dependencies
 COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Add entrypoint.sh
+# Add entrypoint script and make it executable
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
 
-# Add app
+# Copy the rest of the application
 COPY . /usr/src/app
 
-# Run server
-CMD  ["./entrypoint.sh"]
+# Copy final_model.py into the image
+COPY ./final_model.py /usr/src/app/final_model.py
+
+# Give executable permissions to final_model.py
+RUN chmod +x /usr/src/app/final_model.py
+
+# Run server via the entrypoint script
+CMD ["./entrypoint.sh"]
