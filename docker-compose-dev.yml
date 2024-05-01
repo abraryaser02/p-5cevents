@@ -19,8 +19,8 @@ services:
       - DATABASE_TEST_URL=postgresql://postgres:postgres@backend-db:5432/backend_test
     depends_on:
       - backend-db
-    links:
-      - backend-db
+    networks:
+      - p-5cevents_default
 
   backend-db:
     image: postgres:13
@@ -35,6 +35,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - p-5cevents_default
       
   background-task:
     container_name: background-task
@@ -48,6 +50,8 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       - backend-db
+    networks:
+      - p-5cevents_default
 
   client:
     container_name: my-app
@@ -62,6 +66,10 @@ services:
     environment:
       - NODE_ENV=development
     command: npm start
+
+networks:
+  p-5cevents_default:
+    driver: bridge
 
 volumes:
   postgres_volume:

@@ -43,6 +43,7 @@ def info_extraction(email_content):
 
     event_dict = json.loads(final_str)
     print("final_str:", final_str)
+    print(event_dict)
 
     json_dict = json.dumps(event_dict, indent=4)
 
