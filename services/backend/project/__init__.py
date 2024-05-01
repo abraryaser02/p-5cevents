@@ -8,10 +8,10 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 import hashlib #Added
-
-
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 
 # instantiate the app
 app = Flask(__name__)
@@ -88,6 +88,8 @@ class Event(db.Model):
         self.registration_link = registration_link
         self.keywords = keywords
 
+    def get_eventId(self):
+        return self.id
 
 class User_To_Event(db.Model):
     __tablename__ = "user_to_event"
@@ -95,6 +97,24 @@ class User_To_Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
+
+# Create a scheduler instance
+scheduler = BackgroundScheduler()
+scheduler.start()
+
+# delete expired events
+def delete_expired_events():
+    current_time = datetime.now()
+    expired_events = Event.query.filter(Event.end_time < current_time).all()
+    for event in expired_events:
+        db.session.delete(event)
+    db.session.commit()
+
+# Runs every hour to check for expired events
+scheduler.add_job(
+    func=delete_expired_events,
+    trigger=IntervalTrigger(hours=1)
+)
 
 
 #----------user routes-----------
@@ -242,7 +262,7 @@ def generate_user():
     email = lorem.words(1) + choice(organizations)
     password = lorem.words(1)
 
-    new_user = User(username=username, email=email, password = password)
+    new_user = User (email=email, password = password)
 
     db.session.add(new_user)
     db.session.commit()
@@ -385,7 +405,7 @@ def create_event():
     try:
         db.session.add(new_event)
         db.session.commit()
-        return jsonify({'message': 'Event created successfully'}), 201
+        return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500

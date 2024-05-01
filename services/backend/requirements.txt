@@ -10,3 +10,4 @@ psycopg2-binary==2.9.9
 lorem-text==2.1
 flask_cors==4.0.0
 Flask-SocketIO==5.3.6
+apscheduler==3.10.4
