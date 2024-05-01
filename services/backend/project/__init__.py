@@ -488,7 +488,7 @@ def events_by_user(user_id):
         'start_time': event.start_time.isoformat(),
         'end_time': event.end_time.isoformat(),
         'organization': event.organization,
-        'cotact_information': event.contact_information,
+        'contact_information': event.contact_information,
         'registration_link': event.registration_link,
     } for event in events]
 
