@@ -3,27 +3,27 @@ from openai import OpenAI
 import json
 from datetime import datetime
 import re
-import subprocess
 from TrainedEventsTagger import TrainedEventsTagger
 import imaplib
 import email
 from email.header import decode_header
 import time
+import requests
 
-
+# Define the function to parse time
 def parse_time(time_str):
     try:
         return datetime.strptime(time_str, "%I:%M%p").isoformat()
     except ValueError:
-        return None  # or handle as appropriate
+        return None
 
-
-def info_extraction(email):
+# Define the function to extract event information
+def info_extraction(email_content):
     client = OpenAI(
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
 
-    text = email
+    text = email_content
 
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -39,19 +39,20 @@ def info_extraction(email):
     final_str = final_str.replace("```", "")
 
     event_dict = json.loads(final_str)
+    print(event_dict)
 
     json_dict = json.dumps(event_dict, indent=4)
 
     return json_dict
 
-
+# Instantiate the TrainedEventsTagger
 tagger = TrainedEventsTagger('events_tagger_model_parameters_new.pkl')
 
 # Gmail IMAP server settings
 gmail_user = "testing5c5cevents@gmail.com"
 gmail_password = "gicn cpzd kkvg ealf"
 
-
+# Define the function to check unread emails
 def check_unread_emails():
     mail = imaplib.IMAP4_SSL("imap.gmail.com")
     try:
@@ -72,8 +73,12 @@ def check_unread_emails():
             email_content += f"Subject: {subject}\n"
             for part in email_message.walk():
                 if part.get_content_type() == "text/plain":
-                    body = part.get_payload(decode=True).decode()
-                    email_content += "Body:\n" + body + "\n"
+                    try:
+                        body = part.get_payload(decode=True).decode('utf-8', 'ignore')
+                        email_content += "Body:\n" + body + "\n"
+                    except UnicodeDecodeError:
+                        # Handle decoding errors
+                        pass
             email_contents.append(email_content)
 
         for content in email_contents:
@@ -93,28 +98,66 @@ def check_unread_emails():
             final_str = final_str.replace("python", "")
             final_str = final_str.replace("```", "")
 
-            event_lists = eval(final_str)
+            event_lists = json.loads(final_str)
 
             for event in event_lists:
                 json_dict = info_extraction(event)
                 tags = tagger.tag(event)
                 data_dict = json.loads(json_dict)
                 data_dict["tags"] = tags
-                execute_curl_command(data_dict)
+                print(data_dict)
+                execute_post_request(data_dict)
+                
 
     finally:
         mail.logout()
 
+def execute_post_request(data):
+    # Extract data from the dictionary
+    name = data['event_name']
+    description = data['description']
+    location = data['location']
+    start_time = data.get('start_time', None)
+    end_time = data.get('end_time', None)
+    organization = ''  # Assuming the organization is not provided in the data dictionary
+    contact_information = data['contact_information']
+    registration_link = data['registration_link']
+    keywords = data.get('tags', [])  # Get tags if available, otherwise an empty list
 
-def execute_curl_command(data):
-    updated_json = json.dumps(data)
-    curl_command = f'''curl -X POST http://backend:5000/create_event \
--H "Content-Type: application/json" \
--d '{updated_json}' '''
+    # Convert specific time formats to datetime objects
+    if start_time:
+        start_time = parse_time(start_time)
+    if end_time:
+        end_time = parse_time(end_time)
 
-    subprocess.run(curl_command, shell=True)
+    # Create the JSON payload
+    payload = {
+        "name": name,
+        "description": description,
+        "location": location,
+        "start_time": start_time,
+        "end_time": end_time,
+        "organization": organization,
+        "contact_information": contact_information,
+        "registration_link": registration_link,
+        "keywords": keywords
+    }
 
+    # Convert payload to JSON string
+    json_payload = json.dumps(payload)
 
+    # Send POST request
+    url = 'http://backend:5000/create_event'
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url, headers=headers, data=json_payload)
+
+    # Check response status
+    if response.status_code == 200:
+        print("Event created successfully.")
+    else:
+        print("Error creating event:", response.text)
+
+# Main loop to continuously check for new emails
 while True:
     print("Checking for new emails...")
     check_unread_emails()

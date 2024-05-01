@@ -5,8 +5,6 @@ from datetime import datetime, timedelta
 from random import choice
 from lorem_text import lorem
 from flask import Flask, jsonify, request
-from datetime import datetime
-import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 import hashlib #Added
@@ -73,8 +71,8 @@ class Event(db.Model):
     start_time = db.Column(db.DateTime, nullable=True)
     end_time = db.Column(db.DateTime, nullable=True)
     organization = db.Column(db.String(100), nullable=False)
-    contact_information = db.Column(db.Text, nullable=True)
-    registration_link = db.Column(db.String(128), nullable=True)
+    contact_information = db.Column(db.Text, nullable=False)
+    registration_link = db.Column(db.String(128), nullable=False)
     keywords = db.Column(JSON, nullable=False)
 
     # Define the relationship with users
@@ -390,56 +388,23 @@ def get_event_keywords(event_id):
 def create_event():
     data = request.get_json()
 
-    # Extract data or use defaults
-    name = data.get('name')
-    description = data.get('description')
-    location = data.get('location')
-    start_time = data.get('start_time', 'TBD')  # Default to 'TBD' if missing
-    end_time = data.get('end_time', 'TBD')
-    organization = data.get('organization')
-    contact_information = data.get('contact_information', {})
-    registration_link = data.get('registration_link', 'TBD')
-    keywords = data.get('keywords', [])
+    name = data['name']
+    description = data['description']
+    location = data['location']
+    start_time = data['start_time']
+    end_time = data['end_time']
+    organization = data['organization']
+    contact_information = data['contact_information']
+    registration_link = data['registration_link']
+    keywords = data['keywords']
 
-    # Validate required fields
-    if not all([name, description, location, organization]):
-        return jsonify({'error': 'Missing required event fields'}), 400
 
-    # Try parsing datetime fields if not 'TBD'
-    if start_time != 'TBD':
-        try:
-            start_time = datetime.fromisoformat(start_time)
-        except ValueError:
-            start_time = None  # Set to None if parsing fails
+    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time=end_time, organization=organization, contact_information=contact_information,registration_link=registration_link, keywords=keywords)
 
-    if end_time != 'TBD':
-        try:
-            end_time = datetime.fromisoformat(end_time)
-        except ValueError:
-            end_time = None
-
-    # Convert dict to JSON string for contact information
-    if isinstance(contact_information, dict):
-        contact_information = json.dumps(contact_information)
-
-    # Create new event instance
-    new_event = Event(
-        name=name,
-        description=description,
-        location=location,
-        start_time=start_time,
-        end_time=end_time,
-        organization=organization,
-        contact_information=contact_information,
-        registration_link=registration_link,
-        keywords=json.dumps(keywords)
-    )
-
-    # Insert new event into the database
     try:
         db.session.add(new_event)
         db.session.commit()
-        return jsonify({'message': 'Event created successfully', 'event_id': new_event.id}), 201
+        return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId()}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
