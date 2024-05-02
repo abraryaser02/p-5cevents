@@ -80,7 +80,7 @@ function EventPage({}) {
   
   // Toggle favorite status of an event
   const toggleFavorite = async (eventId) => {
-    if (!currentUser || !currentUser.id) {
+    if (!currentUser || !currentUser.userId) {
       alert("Please log in to favorite events.");
       return;
     }
@@ -91,7 +91,7 @@ function EventPage({}) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId })
+        body: JSON.stringify({ user_id: currentUser.userId, event_id: eventId })
       });
   
       if (response.ok) {

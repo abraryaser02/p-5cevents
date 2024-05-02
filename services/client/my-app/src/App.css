@@ -209,6 +209,21 @@ body {
   display: block;
   margin-bottom: 10px;
 }
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.create-event-popup select {
+  width: 100%;
+  height: auto;
+  padding: 5px;
+  margin-top: 10px;
+}
 
 .create-event-popup input[type="text"],
 .create-event-popup input[type="date"],

@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Academic Summit",
+    "date": "2024-09-01",
+    "start_time": "2024-09-01T10:00:00",
+    "end_time": "2024-09-01T17:00:00",
+    "location": "Edmunds, Pomona",
+    "description": "A summit for students and researchers.",
+    "organization": "Academic Society",
+    "contact_information": "contact@academicsummit.org",
+    "registration_link": "https://academicsummit.org/register",
+    "keywords": [
+      "academics and graduate school"
+    ]
+  },
+  {
+    "name": "Career Fair",
+    "date": "2024-10-20",
+    "start_time": "2024-10-20T09:00:00",
+    "end_time": "2024-10-20T15:00:00",
+    "location": "Shan, Harvey Mudd College",
+    "description": "A fair for networking and career opportunities.",
+    "organization": "Career Network",
+    "contact_information": "info@careernetwork.com",
+    "registration_link": "https://careernetwork.com/fair",
+    "keywords": [
+      "networking and career development"
+    ]
+  },
+  {
+    "name": "Wellness Workshop",
+    "date": "2024-11-12",
+    "start_time": "2024-11-12T13:00:00",
+    "end_time": "2024-11-12T16:00:00",
+    "location": "Bridges Auditorium, Pomona College",
+    "description": "A workshop focusing on health and wellness.",
+    "organization": "Wellness Group",
+    "contact_information": "wellnessgroup@community.org",
+    "registration_link": "https://wellnessworkshop.com/register",
+    "keywords": [
+      "wellness"
+    ]
+  },
+  {
+    "name": "Art and Theater Festival",
+    "date": "2024-12-15",
+    "start_time": "2024-12-15T12:00:00",
+    "end_time": "2024-12-15T20:00:00",
+    "location": "Oldenborg Center, Pomona College",
+    "description": "A festival showcasing art and theater performances.",
+    "organization": "Art Association",
+    "contact_information": "festival@artassociation.com",
+    "registration_link": "https://artfestival.com/tickets",
+    "keywords": [
+      "arts and theater"
+    ]
+  },
+  {
+    "name": "Volunteer Drive",
+    "date": "2024-07-10",
+    "start_time": "2024-07-10T08:00:00",
+    "end_time": "2024-07-10T14:00:00",
+    "location": "Frary Dining Hall, Pomona College",
+    "description": "A drive to encourage volunteering and fundraising.",
+    "organization": "Community Help",
+    "contact_information": "info@communityhelp.com",
+    "registration_link": "https://communityhelp.com/drive",
+    "keywords": [
+      "volunteering and fundraising"
+    ]
+  },
+  {
+    "name": "Cultural Night",
+    "date": "2024-05-25",
+    "start_time": "2024-05-25T18:00:00",
+    "end_time": "2024-05-25T22:00:00",
+    "location": "Claremont Mckenna College",
+    "description": "A night to celebrate different cultures.",
+    "organization": "Cultural Group",
+    "contact_information": "contact@culturalgroup.org",
+    "registration_link": "https://culturalgroup.org/night",
+    "keywords": [
+      "affinity groups and cultural events"
+    ]
+  },
+  {
+    "name": "Social Justice Rally",
+    "date": "2024-03-12",
+    "start_time": "2024-03-12T10:00:00",
+    "end_time": "2024-03-12T15:00:00",
+    "location": "Walker Hall, Pomona College",
+    "description": "A rally for activism and social justice.",
+    "organization": "Justice League",
+    "contact_information": "justiceleague@activism.org",
+    "registration_link": "https://justiceleague.org/rally",
+    "keywords": [
+      "activism and social justice"
+    ]
+  },
+  {
+    "name": "Athletic Meet",
+    "date": "2024-06-15",
+    "start_time": "2024-06-15T09:00:00",
+    "end_time": "2024-06-15T17:00:00",
+    "location": "Pomona Baseball Field",
+    "description": "An athletic meet for different sports.",
+    "organization": "Sports Club",
+    "contact_information": "sportsclub@sportscomplex.com",
+    "registration_link": "https://sportscomplex.com/meet",
+    "keywords": [
+      "athletics"
+    ]
+  },
+  {
+    "name": "Nightlife Festival",
+    "date": "2024-11-05",
+    "start_time": "2024-11-05T18:00:00",
+    "end_time": "2024-11-05T23:00:00",
+    "location": "Seaver Theatre Pomona College",
+    "description": "A festival showcasing recreation and nightlife.",
+    "organization": "Nightlife Events",
+    "contact_information": "nightlifeevents@festival.com",
+    "registration_link": "https://nightlifeevents.com/festival",
+    "keywords": [
+      "recreation and nightlife"
+    ]
+  },
+  {
+    "name": "Tech Conference",
+    "date": "2024-08-15",
+    "start_time": "2024-08-15T09:00:00",
+    "end_time": "2024-08-15T17:00:00",
+    "location": "Seaver North, Pomona College",
+    "description": "An annual conference on technology and innovation.",
+    "organization": "Tech Innovators",
+    "contact_information": "info@techinnovators.com",
+    "registration_link": "https://techconference.com/register",
+    "keywords": [
+      "science and technology"
+    ]
+  }
+]

@@ -45,8 +45,6 @@ function EventPage() {
   const [checkedKeywords, setCheckedKeywords] = useState([]);
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
 
-  console.log(currentUser)
-  console.log(currentUser.userId)
   //fetching data from the backend
   useEffect(() => {
     async function fetchData() {
@@ -59,9 +57,9 @@ function EventPage() {
 
   useEffect(() => {
     async function fetchFavoritedEvents() {
-      if (currentUser && currentUser.id) {
+      if (currentUser && currentUser.userId) {
         try {
-          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.id}`);
+          const response = await fetch(`http://localhost:5001/events_by_user/${currentUser.userId}`);
           if (response.ok) {
             const favoritedEventsData = await response.json();
             const favoriteIds = new Set(favoritedEventsData.map(event => event.id));
@@ -91,7 +89,7 @@ function EventPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: currentUser.id, event_id: eventId})
+        body: JSON.stringify({ user_id: currentUser.userId, event_id: eventId})
       });
   
       if (response.ok) {
@@ -189,7 +187,7 @@ function updateFavoritedEvents(result, eventId) {
       organization: organization,
       contact_information: contactInformation,
       registration_link: registrationLink,
-      keywords: keywords.split(',').map(keyword => keyword.trim()) // Converts comma-separated string to an array of trimmed strings
+      keywords: keywords
     };
   
     // Log to console or remove in production
@@ -236,6 +234,8 @@ function updateFavoritedEvents(result, eventId) {
       {/* Event creation popup */}
       {showCreateEventPopup && (
         <div className="create-event-popup">
+          {/* Close Button */}
+          <button className="close-button" onClick={() => setShowCreateEventPopup(false)}>X</button>
           <h2>Create Event</h2>
           <form onSubmit={handleSubmitEvent}>
             <label>Event Name:
@@ -248,7 +248,7 @@ function updateFavoritedEvents(result, eventId) {
               <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
             </label>
             <label>End Time:
-              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value) } required />
             </label>
             <label>Location:
               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
@@ -260,14 +260,35 @@ function updateFavoritedEvents(result, eventId) {
               <input type="text" value={organization} onChange={(e) => setOrganization(e.target.value)} required />
             </label>
             <label>Contact Information:
-              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} required />
+              <input type="text" value={contactInformation} onChange={(e) => setContactInformation(e.target.value)} />
             </label>
             <label>Registration Link:
-              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} required />
+              <input type="url" value={registrationLink} onChange={(e) => setRegistrationLink(e.target.value)} />
             </label>
-            <label>Keywords:
-              <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Comma-separated" />
-            </label>
+            <label>Keywords:</label>
+              <select
+                multiple
+                value={keywords}
+                onChange={(e) => setKeywords(Array.from(e.target.selectedOptions, option => option.value))}
+                required
+            >
+                {/* Options */}
+                <option value="academics and graduate school">Academics and Graduate School</option>
+                <option value="networking and career development">Networking and Career Development</option>
+                <option value="workshops and seminars">Workshops and Seminars</option>
+                <option value="volunteering and fundraising">Volunteering and Fundraising</option>
+                <option value="affinity groups and cultural events">Affinity Groups and Cultural Events</option>
+                <option value="activism and social justice">Activism and Social Justice</option>
+                <option value="athletics">Athletics</option>
+                <option value="wellness">Wellness</option>
+                <option value="recreation and nightlife">Recreation and Nightlife</option>
+                <option value="clubs and organizations">Clubs and Organizations</option>
+                <option value="science and technology">Science and Technology</option>
+                <option value="arts and theater">Arts and Theater</option>
+                <option value="food and snacks">Food and Snacks</option>
+                <option value="pre-professional events">Pre-professional Events</option>
+                <option value="sustainability">Sustainability</option>
+              </select>
             <button type="submit">Submit Event</button>
           </form>
           {/* Confirmation message and button */}

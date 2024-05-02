@@ -1,5 +1,6 @@
 # services/backend/project/__init__.py
 
+import json
 import os
 from datetime import datetime, timedelta
 from random import choice
@@ -71,8 +72,8 @@ class Event(db.Model):
     start_time = db.Column(db.DateTime, nullable=True)
     end_time = db.Column(db.DateTime, nullable=True)
     organization = db.Column(db.String(100), nullable=False)
-    contact_information = db.Column(db.Text, nullable=False)
-    registration_link = db.Column(db.String(128), nullable=False)
+    contact_information = db.Column(db.Text, nullable=True)
+    registration_link = db.Column(db.String(128), nullable=True)
     keywords = db.Column(JSON, nullable=False)
 
     # Define the relationship with users
@@ -243,7 +244,7 @@ def get_users():
 def get_user(user_id):
     user = User.query.get(user_id)
     if user is None:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'message': 'User not found'}), 404
     user_data = {
         'id': user.id,
         'username': user.username,
@@ -296,7 +297,7 @@ def get_events():
 def get_event(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     event_data = {
             'id': event.id,
             'name': event.name,
@@ -316,7 +317,7 @@ def get_event(event_id):
 def get_event_name(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'name': event.name})
 
 # get event description
@@ -324,7 +325,7 @@ def get_event_name(event_id):
 def get_event_description(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'description': event.description})
 
 # get event location
@@ -332,7 +333,7 @@ def get_event_description(event_id):
 def get_event_location(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'location': event.location})
 
 # get event start time
@@ -340,7 +341,7 @@ def get_event_location(event_id):
 def get_event_start_time(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'start_time': event.start_time})
 
 # get event end time
@@ -348,7 +349,7 @@ def get_event_start_time(event_id):
 def get_event_end_time(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'end_time': event.end_time})
 
 # get event organization
@@ -356,7 +357,7 @@ def get_event_end_time(event_id):
 def get_event_organization(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'organization': event.organization})
 
 # get event contact info
@@ -364,7 +365,7 @@ def get_event_organization(event_id):
 def get_event_contact_information(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'contact_information': event.contact_information})
 
 # get event reg link
@@ -372,7 +373,7 @@ def get_event_contact_information(event_id):
 def get_event_registration_link(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'registration_link': event.registration_link})
 
 # get event key words
@@ -380,7 +381,7 @@ def get_event_registration_link(event_id):
 def get_event_keywords(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
     return jsonify({'keywords': event.keywords})
 
 # route for creating a new event
@@ -407,7 +408,7 @@ def create_event():
         return jsonify({'message': 'Event created successfully', 'eventID': new_event.get_eventId()}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
+        return jsonify({'message': 'Failed to create event', 'details': str(e)}), 500
 
 '''
 curl -X POST http://localhost:5001/create_event \
@@ -421,7 +422,7 @@ curl -X POST http://localhost:5001/create_event \
   "organization": "Event Organization",
   "contact_information": "contact info",
   "registration_link": "registration link",
-  "keywords": ["keyword1", "keyword2", "keyword3"]
+  "keywords": ["academics and graduate school", "networking and career development"]
 }'
 '''
 
@@ -430,7 +431,7 @@ curl -X POST http://localhost:5001/create_event \
 def delete_event(event_id):
     event = Event.query.get(event_id)
     if event is None:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
 
     try:
         db.session.delete(event)
@@ -438,7 +439,7 @@ def delete_event(event_id):
         return jsonify({'message': 'Event deleted successfully'}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Failed to delete event', 'details': str(e)}), 500
+        return jsonify({'message': 'Failed to delete event', 'details': str(e)}), 500
 
 # curl -X DELETE http://localhost:5002/events/<id>
     
@@ -446,25 +447,46 @@ def delete_event(event_id):
 # generate a test event
 @app.route('/test_event', methods=['GET'])
 def generate_events():
-    organizations = ['Pomona College', 'CMC', 'Scripps', 'HMC', 'Pitzer College']
+    try:
+        # Read the JSON file
+        with open('test_events.txt', 'r') as file:
+            events_data = json.load(file)
 
-    name = lorem.words(3)
-    description = lorem.words(10)
-    location = lorem.words(2)
-    start_time = datetime.now() + timedelta(days=choice(range(1, 30)))
-    end_time = datetime.now() + timedelta(days=choice(range(1, 30)))
+        # Iterate over each event in the JSON data
+        for event_data in events_data:
+            # Extract data from each event
+            name = event_data.get('name')
+            description = event_data.get('description')
+            location = event_data.get('location')
+            start_time = datetime.fromisoformat(event_data.get('start_time'))
+            end_time = datetime.fromisoformat(event_data.get('end_time'))
+            organization = event_data.get('organization')
+            contact_information = event_data.get('contact_information')
+            registration_link = event_data.get('registration_link')
+            keywords = event_data.get('keywords')
 
-    organization = choice(organizations)
+            # Create a new event instance
+            new_event = Event(
+                name=name,
+                description=description,
+                location=location,
+                start_time=start_time,
+                end_time=end_time,
+                organization=organization,
+                contact_information=contact_information,
+                registration_link=registration_link,
+                keywords=keywords
+            )
 
-    contact_information = lorem.words(3)
-    registration_link = lorem.words(1)
-    keywords = ["keyword1", "keyword2", "keyword3"]
+            # Add the new event to the session
+            db.session.add(new_event)
 
-    new_event = Event(name=name, description=description, location=location, start_time=start_time, end_time = end_time, organization=organization, contact_information=contact_information, registration_link=registration_link, keywords=keywords)
+        # Commit all changes
+        db.session.commit()
+        return jsonify({'message': 'Test events created successfully'}), 201
 
-    db.session.add(new_event)
-    db.session.commit()
-    return jsonify({'message': 'Test events created successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
@@ -476,7 +498,7 @@ if __name__ == '__main__':
 def events_by_user(user_id):
     user = User.query.get(user_id)
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'message': 'User not found'}), 404
 
     events = user.get_events()
     
@@ -490,6 +512,7 @@ def events_by_user(user_id):
         'organization': event.organization,
         'contact_information': event.contact_information,
         'registration_link': event.registration_link,
+        'keywords': event.keywords
     } for event in events]
 
     return jsonify(events_list)
@@ -497,6 +520,7 @@ def events_by_user(user_id):
 '''
 curl -X GET http://localhost:5001/events_by_user/1
 '''
+
 #Add a new row in the database
 @app.route('/toggle_user_event', methods=['POST'])
 def toggle_user_event():
@@ -505,17 +529,17 @@ def toggle_user_event():
     event_id = data.get('event_id')
 
     if not user_id or not event_id:
-        return jsonify({'error': 'Missing user_id or event_id'}), 400
+        return jsonify({'message': 'Missing user_id or event_id'}), 400
 
     # Check if user exists
     user = User.query.get(user_id)
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'message': 'User not found'}), 404
 
     # Check if event exists
     event = Event.query.get(event_id)
     if not event:
-        return jsonify({'error': 'Event not found'}), 404
+        return jsonify({'message': 'Event not found'}), 404
 
     # Check for existing association
     existing_association = User_To_Event.query.filter_by(user_id=user_id, event_id=event_id).first()
@@ -523,13 +547,13 @@ def toggle_user_event():
         # If found, delete it
         db.session.delete(existing_association)
         db.session.commit()
-        return jsonify({'message': 'User removed from event successfully'}), 200
+        return jsonify({'message': 'User removed from event successfully', 'isFavorited': False}), 200
 
     # If not found, create new association
     new_association = User_To_Event(user_id=user_id, event_id=event_id)
     db.session.add(new_association)
     db.session.commit()
-    return jsonify({'message': 'User added to event successfully'}), 201
+    return jsonify({'message': 'User added to event successfully', 'isFavorited': True}), 201
 
 '''
 curl -X POST http://localhost:5001/toggle_user_event \
