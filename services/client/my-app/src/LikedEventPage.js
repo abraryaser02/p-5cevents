@@ -243,6 +243,7 @@ function EventPage({}) {
               <p>Organization: {event.organization}</p>
               <p>Contact Information: {event.contact_information}</p>
               <p>Registration Link: <a href={event.registration_link}>{event.registration_link}</a></p>
+              <p>Keywords: {event.keywords.join(', ')}</p>
             </li>
           ))}
         </ul>
