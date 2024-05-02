@@ -227,11 +227,11 @@ def create_scraped_event():
             "organization": "Event Organization" 
         }
 
-    name = data['event_name']
+    name = data['name']
     description = data['description']
     #date = data['date']
     location = data['location']
-    time = data['time']
+    time = "2024-03-22T15:30:00"
     # #start_time = data['start_time']
     # end_time = data['end_time']
     # contact_informaton = data['contact_informaton']
@@ -240,7 +240,7 @@ def create_scraped_event():
     # subject_tag = data['subject_tag']
 
     #need to be fixed
-    organization = data['event_name']
+    organization = data['name']
 
     new_event = Event(name=name, description=description, location=location, time=time, organization=organization)
 

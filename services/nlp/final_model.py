@@ -302,7 +302,7 @@ def check_unread_emails():
             email_contents.append(email_content)
         # Process the email contents
         for content in email_contents:
-
+            
             client = OpenAI(
                 api_key=os.environ.get("OPENAI_API_KEY"),
             )
@@ -341,7 +341,7 @@ def check_unread_emails():
 
                 # Add a list as the value for a key
                 data_dict["topic_tag"] = topic_tag
-                data_dict["subjcet_tag"] = list(subject_tag)
+                data_dict["subject_tag"] = list(subject_tag)
 
                 #print(data_dict)
                 # Convert the updated dictionary back to JSON
