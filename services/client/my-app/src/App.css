@@ -185,9 +185,10 @@ body {
   border: 1px solid #ccc;
   padding: 20px;
   position: fixed;
-  top: 50%; /* Center vertically */
+  top: 20px; /* Adjust top margin */
+  bottom: 20px; /* Adjust bottom margin */
   left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Center horizontally and vertically */
+  transform: translateX(-50%); /* Center horizontally */
   z-index: 1000; /* Ensure it's on top of other content */
 }
 /* CSS for form labels and inputs */
@@ -547,13 +548,12 @@ body {
   width: 1080px;
 }
 
-.filter-checkboxes {
-  display: flex;
-  flex-direction: column; 
-}
-
 .filter-checkbox {
-  margin-bottom: 5px; 
+  display: inline-block;
+  width: calc(33.33% - 10px);
+  margin-bottom: 10px;
+  margin-right: 10px;
+  vertical-align: top;
 }
 
 .filter-checkbox input {
@@ -561,16 +561,15 @@ body {
 }
 
 .filter-button {
-  background-color: #92956F; 
-  color: white; 
+  background-color: #92956F;
+  color: white;
   padding: 10px 10px;
-  border: none; 
-  border-radius: 5px; 
-  cursor: pointer; 
-  transition: background-color 0.3s; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .filter-button:hover {
-  background-color: #253e0d; 
+  background-color: #253e0d;
 }
-
