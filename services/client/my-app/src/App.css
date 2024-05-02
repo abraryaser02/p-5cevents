@@ -190,6 +190,19 @@ body {
   left: 50%; /* Center horizontally */
   transform: translateX(-50%); /* Center horizontally */
   z-index: 1000; /* Ensure it's on top of other content */
+  max-height: calc(100vh - 40px); /* Limit maximum height to fit within margins */
+  overflow-y: auto; /* Enable vertical scroll if content exceeds maximum height */
+}
+
+/* CSS for submit button */
+.create-event-popup button[type="submit"] {
+  background-color: #92956F;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px; /* Adjust top margin */
 }
 /* CSS for form labels and inputs */
 .create-event-popup label {
@@ -206,16 +219,6 @@ body {
   border-radius: 4px;
   box-sizing: border-box;
   margin-bottom: 10px;
-}
-
-/* CSS for submit button */
-.create-event-popup button[type="submit"] {
-  background-color: #92956F;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
 }
 
 
